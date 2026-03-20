@@ -57,7 +57,7 @@ export default function Sidebar() {
         <div className="
           w-10 h-10
           rounded-xl
-          bg-gradient-to-r from-[#5aa9e6] to-[#4a8fd9]
+          bg-linear-to-r from-[#5aa9e6] to-[#4a8fd9]
           flex items-center justify-center
           text-white
           shadow-md
@@ -109,7 +109,7 @@ export default function Sidebar() {
         <div className="
           w-10 h-10
           rounded-full
-          bg-gradient-to-r from-[#5aa9e6] to-[#4a8fd9]
+          bg-linear-to-r from-[#5aa9e6] to-[#4a8fd9]
           flex items-center justify-center
           text-white font-semibold
           shadow-md

@@ -1,4 +1,4 @@
-import Sidebar from "./Sidebar";
+import Header from './Header'
 
 export default function MainLayout({
   children,
@@ -6,16 +6,20 @@ export default function MainLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex h-screen bg-[#F4F7FB] overflow-hidden">
+    <div
+      className="
+        flex flex-col min-h-screen
+        bg-linear-to-br
+        from-[#dce9eb]
+        via-[#6caedf]
+        to-[#bedadc]
+      "
+    >
+      <Header />
 
-      {/* SIDEBAR */}
-      <Sidebar />
-
-      {/* CONTENIDO */}
-      <main className="flex-1 h-full overflow-auto">
+      <main className="flex-1 overflow-y-auto">
         {children}
       </main>
-
     </div>
   );
 }

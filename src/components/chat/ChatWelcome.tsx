@@ -8,10 +8,6 @@ export default function ChatWelcome() {
         <Bot size={40} />
       </div>
 
-      <h2 className="mt-6 text-2xl font-semibold text-gray-800">
-        Hola, soy PEPE AI
-      </h2>
-
       <p className="mt-3 text-gray-500 max-w-md">
         Pregunta lo que quieras sobre impresoras, soporte técnico o análisis.
       </p>
