@@ -8,22 +8,42 @@ type Message = {
   sender: 'user' | 'bot'
 }
 
-export default function ChatInput() {
+type ChatInputProps = {
+  initialPrompt?: string
+}
+
+export default function ChatInput({ initialPrompt = '' }: ChatInputProps) {
   const [message, setMessage] = useState('')
-  const [messages, setMessages] = useState<Message[]>([])
   const [loading, setLoading] = useState(false)
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null)
 
+  // ✅ Inicialización COMPLETA (user + bot)
+  const [messages, setMessages] = useState<Message[]>(() => {
+    if (initialPrompt) {
+      return [
+        { text: initialPrompt, sender: 'user' },
+        {
+          text: getPepeResponse(initialPrompt),
+          sender: 'bot',
+        },
+      ]
+    }
+    return []
+  })
+
+  // 🔽 Scroll automático (esto SÍ es válido)
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages, loading])
+  }, [messages])
 
   const handleSend = () => {
     if (!message.trim()) return
 
+    const userText = message
+
     const userMessage: Message = {
-      text: message,
+      text: userText,
       sender: 'user',
     }
 
@@ -33,7 +53,7 @@ export default function ChatInput() {
 
     setTimeout(() => {
       const response: Message = {
-        text: getPepeResponse(message),
+        text: getPepeResponse(userText),
         sender: 'bot',
       }
 
@@ -68,20 +88,10 @@ export default function ChatInput() {
                   className={`
                     px-5 py-3 rounded-2xl text-sm leading-relaxed
                     max-w-[75%]
-                    transition-all duration-200
                     ${
                       msg.sender === 'user'
-                        ? `
-                          bg-[#5aa9e6] text-white
-                          rounded-br-md
-                          shadow-md
-                        `
-                        : `
-                          bg-white text-gray-800
-                          border border-gray-200
-                          rounded-bl-md
-                          shadow-sm
-                        `
+                        ? 'bg-[#5aa9e6] text-white rounded-br-md shadow-md'
+                        : 'bg-white text-gray-800 border border-gray-200 rounded-bl-md shadow-sm'
                     }
                   `}
                 >
@@ -90,7 +100,6 @@ export default function ChatInput() {
               </div>
             ))}
 
-            {/* LOADING más moderno */}
             {loading && (
               <div className="text-gray-400 text-sm animate-pulse">
                 PEPE está escribiendo...
@@ -102,19 +111,13 @@ export default function ChatInput() {
         )}
       </div>
 
-      {/* INPUT PRO */}
+      {/* INPUT */}
       <div className="px-6 pb-6">
         <div className="max-w-2xl mx-auto">
-
           <div className="
-            flex items-center
-            bg-white
-            rounded-2xl
-            px-4 py-3
-            shadow-lg
-            border border-gray-200
+            flex items-center bg-white rounded-2xl
+            px-4 py-3 shadow-lg border border-gray-200
             focus-within:ring-2 focus-within:ring-[#5aa9e6]/30
-            transition
           ">
 
             <input
@@ -126,21 +129,15 @@ export default function ChatInput() {
               onKeyDown={handleKeyDown}
             />
 
-            <button className="text-gray-400 hover:text-gray-600 transition">
+            <button className="text-gray-400 hover:text-gray-600">
               <Mic size={18} />
             </button>
 
             <button
               onClick={handleSend}
               className="
-                ml-2 
-                bg-[#5aa9e6]
-                text-white 
-                p-2.5 rounded-xl
-                hover:scale-105
-                active:scale-95
-                transition
-                shadow-md
+                ml-2 bg-[#5aa9e6] text-white p-2.5 rounded-xl
+                hover:scale-105 active:scale-95 transition shadow-md
               "
             >
               <Send size={16} />

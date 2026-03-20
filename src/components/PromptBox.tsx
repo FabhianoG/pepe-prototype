@@ -13,8 +13,6 @@ export default function PromptBox() {
 
   return (
     <div className="max-w-2xl mx-auto">
-
-      {/* CAJA PRINCIPAL */}
       <div className="
         bg-white/80 backdrop-blur
         border border-white/40
@@ -22,10 +20,7 @@ export default function PromptBox() {
         rounded-2xl
         p-4
       ">
-
-        {/* INPUT */}
         <div className="flex items-center">
-
           <input
             type="text"
             placeholder="Describe tu problema... (ej: no imprime a color)"
@@ -35,25 +30,17 @@ export default function PromptBox() {
             onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
           />
 
-          {/* BOTÓN */}
           <button
             onClick={handleSubmit}
             className="
-              bg-black
-              text-white
-              p-3
-              rounded-xl
-              hover:scale-105
-              active:scale-95
-              transition
+              bg-black text-white p-3 rounded-xl
+              hover:scale-105 active:scale-95 transition
             "
           >
             <Send size={16} />
           </button>
-
         </div>
 
-        {/* SUGERENCIAS */}
         <div className="mt-4 flex flex-wrap gap-2">
           {[
             "No imprime a color",
@@ -65,21 +52,16 @@ export default function PromptBox() {
               key={i}
               onClick={() => setPrompt(item)}
               className="
-                bg-white
-                border border-gray-200
-                px-3 py-1.5
-                rounded-full
-                text-xs
-                text-gray-600
-                hover:bg-gray-100
-                transition
+                bg-white border border-gray-200
+                px-3 py-1.5 rounded-full
+                text-xs text-gray-600
+                hover:bg-gray-100 transition
               "
             >
               {item}
             </button>
           ))}
         </div>
-
       </div>
     </div>
   )
