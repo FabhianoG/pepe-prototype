@@ -1,4 +1,4 @@
-import { Mic, Send, Bot } from 'lucide-react'
+import { Mic, Send } from 'lucide-react'
 import { useState, useRef, useEffect } from 'react'
 import { getPepeResponse } from '../services/pepe.service'
 import ChatWelcome from './ChatWelcome'
@@ -47,36 +47,41 @@ export default function ChatInput() {
   }
 
   return (
-    <div className="flex flex-col h-full overflow-hidden">
+    <div className="flex flex-col h-full">
 
       {/* MENSAJES */}
-      <div className="flex-1 overflow-y-auto min-h-0 px-6 py-4 bg-[#f5f9fc]">
+      <div className="flex-1 overflow-y-auto px-6 py-10">
+
         {messages.length === 0 ? (
           <ChatWelcome />
         ) : (
-          <div className="space-y-4">
+          <div className="max-w-3xl mx-auto space-y-6">
+
             {messages.map((msg, index) => (
               <div
                 key={index}
-                className={`flex items-end gap-2 ${
+                className={`flex ${
                   msg.sender === 'user' ? 'justify-end' : 'justify-start'
                 }`}
               >
-                {/* BOT */}
-                {msg.sender === 'bot' && (
-                  <div className="w-8 h-8 rounded-full bg-linear-to-r from-[#5aa9e6] to-[#4a8fd9] flex items-center justify-center text-white shadow-sm">
-                    <Bot size={16} />
-                  </div>
-                )}
-
-                {/* MENSAJE */}
                 <div
                   className={`
-                    px-4 py-2 rounded-2xl text-sm max-w-[75%] shadow-sm
+                    px-5 py-3 rounded-2xl text-sm leading-relaxed
+                    max-w-[75%]
+                    transition-all duration-200
                     ${
                       msg.sender === 'user'
-                        ? 'bg-linear-to-r from-[#5aa9e6] to-[#4a8fd9] text-white rounded-br-sm'
-                        : 'bg-white text-gray-800 border border-gray-200 rounded-bl-sm'
+                        ? `
+                          bg-[#5aa9e6] text-white
+                          rounded-br-md
+                          shadow-md
+                        `
+                        : `
+                          bg-white text-gray-800
+                          border border-gray-200
+                          rounded-bl-md
+                          shadow-sm
+                        `
                     }
                   `}
                 >
@@ -85,15 +90,10 @@ export default function ChatInput() {
               </div>
             ))}
 
-            {/* LOADING */}
+            {/* LOADING más moderno */}
             {loading && (
-              <div className="flex items-center gap-2 text-gray-500 text-sm">
-                <div className="w-8 h-8 rounded-full bg-linear-to-r from-[#5aa9e6] to-[#4a8fd9] flex items-center justify-center text-white">
-                  <Bot size={16} />
-                </div>
-                <span className="animate-pulse">
-                  PEPE está escribiendo...
-                </span>
+              <div className="text-gray-400 text-sm animate-pulse">
+                PEPE está escribiendo...
               </div>
             )}
 
@@ -102,37 +102,54 @@ export default function ChatInput() {
         )}
       </div>
 
-      {/* INPUT */}
-      <div className="p-4 bg-white border-t shrink-0">
-        <div className="flex items-center bg-[#f0f4f8] rounded-full px-4 py-2 shadow-sm focus-within:ring-2 focus-within:ring-[#5aa9e6]/30">
-          <input
-            type="text"
-            placeholder="Escribe tu consulta sobre impresoras..."
-            className="flex-1 bg-transparent outline-none px-2 text-sm"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            onKeyDown={handleKeyDown}
-          />
+      {/* INPUT PRO */}
+      <div className="px-6 pb-6">
+        <div className="max-w-2xl mx-auto">
 
-          <button className="text-gray-400 hover:text-gray-600 transition">
-            <Mic size={18} />
-          </button>
+          <div className="
+            flex items-center
+            bg-white
+            rounded-2xl
+            px-4 py-3
+            shadow-lg
+            border border-gray-200
+            focus-within:ring-2 focus-within:ring-[#5aa9e6]/30
+            transition
+          ">
 
-          <button
-            onClick={handleSend}
-            className="
-              ml-2 
-              bg-linear-to-r from-[#5aa9e6] to-[#4a8fd9]
-              text-white 
-              p-2 rounded-full 
-              hover:opacity-90 
-              transition
-            "
-          >
-            <Send size={16} />
-          </button>
+            <input
+              type="text"
+              placeholder="Escribe tu consulta..."
+              className="flex-1 bg-transparent outline-none px-2 text-sm text-gray-700"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              onKeyDown={handleKeyDown}
+            />
+
+            <button className="text-gray-400 hover:text-gray-600 transition">
+              <Mic size={18} />
+            </button>
+
+            <button
+              onClick={handleSend}
+              className="
+                ml-2 
+                bg-[#5aa9e6]
+                text-white 
+                p-2.5 rounded-xl
+                hover:scale-105
+                active:scale-95
+                transition
+                shadow-md
+              "
+            >
+              <Send size={16} />
+            </button>
+
+          </div>
         </div>
       </div>
+
     </div>
   )
 }

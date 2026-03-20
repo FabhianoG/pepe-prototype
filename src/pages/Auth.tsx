@@ -18,7 +18,7 @@ export default function Login() {
 
     if (user) {
       localStorage.setItem('user', JSON.stringify(user))
-      navigate('/chat')
+      navigate("/home")
     } else {
       alert('Credenciales incorrectas ❌')
     }

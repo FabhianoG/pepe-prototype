@@ -1,55 +1,60 @@
-import { Menu, Download, Printer, Expand, ShieldCheck, RotateCcw } from 'lucide-react'
+import {
+  Download,
+  Printer,
+  Expand,
+  ShieldCheck,
+  RotateCcw,
+} from 'lucide-react'
+import { resetPepeState } from '../services/pepe.service'
 
 type ChatHeaderProps = {
-  onReset: () => void;
-};
+  onReset: () => void
+}
 
 export default function ChatHeader({ onReset }: ChatHeaderProps) {
   return (
-    <div className="
-      bg-linear-to-r
-      from-[#c7e6f5] 
-      to-[#8fb9e8]
-      text-gray-900
-      px-6 py-3 
-      rounded-t-2xl 
+    <div
+      className="
       flex items-center justify-between
-      border-b border-white/40
-    ">
-      
+      px-6 py-4
+      border-b border-gray-200
+      bg-white/70 backdrop-blur
+    "
+    >
       {/* IZQUIERDA */}
       <div className="flex items-center gap-3">
-        <Menu size={20} className="text-gray-700" />
 
         <div className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse"></span>
-          <h1 className="font-semibold">PEPE AI</h1>
+          <span className="w-2.5 h-2.5 bg-green-500 rounded-full"></span>
+          <h1 className="font-semibold text-gray-800">PEPE AI</h1>
         </div>
       </div>
 
       {/* DERECHA */}
       <div className="flex items-center gap-3 text-sm">
-        
-        <span className="flex items-center gap-1 text-gray-700">
-          <ShieldCheck size={16} /> Privado y seguro
+        <span className="flex items-center gap-1 text-gray-500">
+          <ShieldCheck size={16} /> Seguro
         </span>
 
         <button
-          onClick={onReset}
-          className="bg-white/60 px-3 py-1 rounded-lg flex items-center gap-1 hover:bg-white transition border border-white/40"
+          onClick={() => {
+            onReset()
+            resetPepeState()
+          }}
+          className="bg-gray-100 px-3 py-1 rounded-lg flex items-center gap-1 hover:bg-gray-200 transition"
         >
-          <RotateCcw size={16} /> Nuevo chat
+          <RotateCcw size={16} /> Nuevo
         </button>
 
-        <button className="bg-white/60 px-3 py-1 rounded-lg flex items-center gap-1 hover:bg-white transition border border-white/40">
-          <Download size={16} /> Descargar
+        <button className="bg-gray-100 px-3 py-1 rounded-lg flex items-center gap-1 hover:bg-gray-200 transition">
+          <Download size={16} />
         </button>
 
-        <button className="bg-white/60 px-3 py-1 rounded-lg flex items-center gap-1 hover:bg-white transition border border-white/40">
-          <Printer size={16} /> Imprimir
+        <button className="bg-gray-100 px-3 py-1 rounded-lg flex items-center gap-1 hover:bg-gray-200 transition">
+          <Printer size={16} />
         </button>
 
-        <button className="bg-white/60 p-2 rounded-lg hover:bg-white transition border border-white/40">
+        <button className="bg-gray-100 p-2 rounded-lg hover:bg-gray-200 transition">
           <Expand size={16} />
         </button>
       </div>

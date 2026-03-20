@@ -2,20 +2,20 @@ import { Bot } from 'lucide-react'
 
 export default function ChatWelcome() {
   return (
-    <div className="flex flex-col items-center justify-center text-center h-full min-h-75 px-4">
+    <div className="flex flex-col items-center justify-center text-center h-full">
       
-      <div className="w-20 h-20 rounded-full bg-linear-to-r from-[#5aa9e6] to-[#4a8fd9] flex items-center justify-center text-white shadow-sm">
+      <div className="w-20 h-20 rounded-full bg-[#5aa9e6] flex items-center justify-center text-white">
         <Bot size={40} />
       </div>
 
-      <h2 className="mt-4 text-xl font-semibold text-[#1f3c50]">
+      <h2 className="mt-6 text-2xl font-semibold text-gray-800">
         Hola, soy PEPE AI
       </h2>
 
-      <p className="mt-2 text-gray-600 max-w-md">
-        Soy tu asistente inteligente de Misión Tecnológica. Puedo ayudarte con
-        información, análisis y soporte tecnológico.
+      <p className="mt-3 text-gray-500 max-w-md">
+        Pregunta lo que quieras sobre impresoras, soporte técnico o análisis.
       </p>
+
     </div>
   )
 }

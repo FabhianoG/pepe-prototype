@@ -12,18 +12,16 @@ export default function ChatPepe() {
 
   return (
     <MainLayout>
-      <div className="w-full min-h-screen bg-[#f4f7fb] py-6">
-        <div className="max-w-5xl mx-auto bg-white rounded-2xl shadow-md flex flex-col h-[80vh] overflow-hidden">
-          
-          {/* HEADER */}
-          <ChatHeader onReset={handleReset} />
+      <div className="h-full flex flex-col bg-[#f7f9fc]">
 
-          {/* 🔥 FIX CLAVE */}
-          <div className="flex-1 min-h-0">
-            <ChatInput key={resetFlag ? 'reset-1' : 'reset-0'} />
-          </div>
+        {/* HEADER */}
+        <ChatHeader onReset={handleReset} />
 
+        {/* CHAT */}
+        <div className="flex-1 min-h-0">
+          <ChatInput key={resetFlag ? 'reset-1' : 'reset-0'} />
         </div>
+
       </div>
     </MainLayout>
   )
