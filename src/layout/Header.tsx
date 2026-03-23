@@ -40,11 +40,20 @@ export default function Header() {
             />
           </div>
 
-          <span className="font-semibold text-gray-800 text-base">PEPE AI</span>
+          <span className="font-semibold text-gray-800 text-base">
+            PEPE AI
+          </span>
         </div>
 
         {/* 🧭 NAV DESKTOP */}
         <nav className="absolute left-1/2 transform -translate-x-1/2 hidden md:flex items-center gap-8 text-sm text-gray-600">
+          <button
+            onClick={() => navigate('/home')}
+            className="hover:text-[#5aa9e6] transition font-medium"
+          >
+            Agente Pepe
+          </button>
+
           <button
             onClick={() => navigate('/conocenos')}
             className="hover:text-[#5aa9e6] transition"
@@ -79,9 +88,18 @@ export default function Header() {
         <div className="hidden md:block relative z-1000">
           <button
             onClick={() => setOpen(!open)}
-            className="flex items-center gap-2 bg-white/80 border border-gray-200 px-2 py-1.5 pr-3 rounded-full hover:bg-white transition shadow-sm"
+            className="
+              flex items-center gap-2
+              bg-white/80 backdrop-blur-md
+              border border-gray-200/60
+              px-2 py-1.5 pr-3
+              rounded-full
+              hover:bg-white
+              transition
+              shadow-sm
+            "
           >
-            <div className="w-8 h-8 bg-linear-to-br from-[#5aa9e6] to-[#4a8fd9] text-white rounded-full flex items-center justify-center text-sm">
+            <div className="w-8 h-8 bg-linear-to-br from-[#5aa9e6] to-[#4a8fd9] text-white rounded-full flex items-center justify-center text-sm font-medium">
               {user?.name?.charAt(0) || 'U'}
             </div>
 
@@ -91,14 +109,17 @@ export default function Header() {
             />
           </button>
 
-          {/* ✅ DROPDOWN FIX */}
+          {/* 💎 DROPDOWN MEJORADO */}
           <div
             className={`
-              absolute right-0 mt-3 w-56
-              bg-white rounded-xl shadow-lg border
+              absolute right-0 mt-3 w-60
+              bg-white backdrop-blur-xl
+              border border-white/30
+              rounded-2xl
+              shadow-xl shadow-black/5
               overflow-hidden
               transition-all duration-200
-              z-9999 pointer-events-auto
+              z-9999
               ${
                 open
                   ? 'opacity-100 scale-100'
@@ -106,26 +127,48 @@ export default function Header() {
               }
             `}
           >
-            <div className="px-4 py-3 border-b bg-gray-50">
-              <p className="font-semibold">{user?.name || 'Usuario'}</p>
-              <p className="text-sm text-gray-500 truncate max-w-45">
+            {/* HEADER USER */}
+            <div className="px-4 py-3 border-b border-gray-100">
+              <p className="font-semibold text-gray-800 truncate">
+                {user?.name || 'Usuario'}
+              </p>
+
+              <p
+                className="text-xs text-gray-500 truncate mt-0.5"
+                title={user?.email}
+              >
                 {user?.email}
               </p>
             </div>
 
-            <button
-              onClick={() => navigate('/profile')}
-              className="flex items-center gap-2 px-4 py-2 hover:bg-gray-50 w-full"
-            >
-              <User size={16} /> Mi perfil
-            </button>
+            {/* OPCIONES */}
+            <div className="py-1">
+              <button
+                onClick={() => navigate('/profile')}
+                className="
+                  flex items-center gap-2 px-4 py-2.5 w-full
+                  text-sm text-gray-700
+                  hover:bg-gray-100/70
+                  transition
+                "
+              >
+                <User size={16} className="opacity-70" />
+                Mi perfil
+              </button>
 
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-2 px-4 py-2 hover:bg-red-50 text-red-500 w-full"
-            >
-              <LogOut size={16} /> Cerrar sesión
-            </button>
+              <button
+                onClick={handleLogout}
+                className="
+                  flex items-center gap-2 px-4 py-2.5 w-full
+                  text-sm text-red-500
+                  hover:bg-red-50
+                  transition
+                "
+              >
+                <LogOut size={16} className="opacity-80" />
+                Cerrar sesión
+              </button>
+            </div>
           </div>
         </div>
       </header>
@@ -135,9 +178,21 @@ export default function Header() {
         <div className="fixed top-0 left-0 w-full h-full bg-black/30 backdrop-blur-sm z-900">
           <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[90%] max-w-sm bg-white rounded-xl shadow-lg p-4">
             <div className="flex flex-col gap-4 text-gray-700">
-              <button onClick={() => navigate('/conocenos')}>Conócenos</button>
-              <button onClick={() => navigate('/faq')}>Preguntas</button>
-              <button onClick={() => navigate('/dashboard')}>Dashboard</button>
+              <button onClick={() => navigate('/home')}>
+                Agente Pepe
+              </button>
+
+              <button onClick={() => navigate('/conocenos')}>
+                Conócenos
+              </button>
+
+              <button onClick={() => navigate('/faq')}>
+                Preguntas
+              </button>
+
+              <button onClick={() => navigate('/dashboard')}>
+                Dashboard
+              </button>
 
               <hr />
 

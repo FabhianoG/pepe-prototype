@@ -5,7 +5,7 @@ import {
   RotateCcw,
   Menu,
   X,
-  Headphones
+  Headphones,
 } from 'lucide-react'
 import { resetPepeState } from '../../services/pepe.service'
 
@@ -24,108 +24,117 @@ export default function ChatHeader({
   isOpen,
   onGenerateTicket,
   onToggleFullscreen,
-  isFullscreen
+  isFullscreen,
 }: ChatHeaderProps) {
-
+  // 🔹 BOTONES BASE (más pro)
   const btn =
-    "p-2 rounded-lg bg-gray-50 hover:bg-gray-100 active:scale-95 transition shadow-sm"
+    'p-2 rounded-xl bg-white/70 backdrop-blur-md border border-gray-200/60 hover:bg-white hover:shadow-md active:scale-95 transition-all duration-200'
 
   return (
-    <header className="
-      w-full
-      flex items-center justify-between
-      px-3 sm:px-4 md:px-6
-      py-2.5 sm:py-3
-      border-b border-gray-200/60
-      bg-white/80 backdrop-blur-xl
-      sticky top-0 z-10
-    ">
-
-      {/* IZQUIERDA */}
-      <div className="flex items-center sm:gap-3 min-w-0">
-
-        <button onClick={onMenu} className={`${btn} mr-4`}>
+    <header
+      className="
+        w-full
+        flex items-center justify-between
+        px-4 md:px-6
+        py-3
+        border-b border-gray-200/60
+        bg-white/70 backdrop-blur-xl
+        sticky top-0 z-20
+      "
+    >
+      {/* 🔷 IZQUIERDA */}
+      <div className="flex items-center gap-3 min-w-0">
+        {/* MENU */}
+        <button onClick={onMenu} className={`${btn}`}>
           {isOpen ? <X size={18} /> : <Menu size={18} />}
         </button>
 
+        {/* TITULO */}
         <div className="leading-tight truncate">
           <h1 className="text-sm sm:text-base font-semibold text-gray-800 truncate">
             PEPE AI
           </h1>
           <p className="hidden sm:block text-xs text-gray-400">
-            Asistente técnico
+            Asistente técnico inteligente
           </p>
         </div>
 
-        <span className="
-          hidden md:flex items-center gap-1
-          text-xs text-green-600
-          bg-green-50 px-2 py-0.5
-          rounded-full ml-1
-        ">
-          <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+        {/* ESTADO */}
+        <span
+          className="
+            hidden md:flex items-center gap-2
+            text-xs font-medium text-green-700
+            bg-green-50/80
+            px-2.5 py-1
+            rounded-full
+            border border-green-200/60
+            ml-1
+          "
+        >
+          <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
           Activo
         </span>
       </div>
 
-      {/* CENTRO */}
-      <div className="
-        flex-1 flex justify-center
-        px-2 sm:px-4
-      ">
+      {/* 🔷 CENTRO (CTA IMPORTANTE) */}
+      <div className="flex-1 flex justify-center px-2 sm:px-4">
         <button
           onClick={onGenerateTicket}
           className="
             flex items-center gap-2
-            px-3 sm:px-4 py-2
-            rounded-lg
-            bg-gray-50 hover:bg-gray-100
-            active:scale-95
-            transition shadow-sm
-            text-gray-700 hover:text-[#5aa9e6]
+            px-4 py-2
+            rounded-xl
+            bg-white
+            border border-gray-200
+            text-gray-700
+            hover:bg-gray-50
+            hover:border-gray-300
+            transition
+            shadow-sm
             text-sm font-medium
             whitespace-nowrap
           "
         >
-          <Headphones size={16} />
-          <span className="hidden sm:inline">
-            Soporte técnico
-          </span>
+          <Headphones size={16} className="opacity-70" />
+          <span className="hidden sm:inline">Soporte técnico</span>
         </button>
       </div>
 
-      {/* DERECHA */}
-      <div className="flex items-center gap-1 sm:gap-2 shrink-0">
-
-        {/* Fullscreen */}
+      {/* 🔷 DERECHA */}
+      <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+        {/* FULLSCREEN */}
         <button
           onClick={onToggleFullscreen}
           className={`${btn} hidden md:flex`}
+          title="Pantalla completa"
         >
           {isFullscreen ? <X size={16} /> : <Expand size={16} />}
         </button>
 
-        {/* Reset */}
+        {/* RESET */}
         <button
           onClick={() => {
             onReset()
             resetPepeState()
           }}
           className={btn}
+          title="Reiniciar chat"
         >
           <RotateCcw size={15} />
         </button>
 
-        {/* Download */}
-        <button className={`${btn} hidden sm:flex`}>
+        {/* DOWNLOAD */}
+        <button
+          className={`${btn} hidden sm:flex`}
+          title="Descargar conversación"
+        >
           <Download size={16} />
         </button>
 
-        {/* Print */}
-        <button className={`${btn} hidden sm:flex`}>
+        {/* PRINT */}
+        <button className={`${btn} hidden sm:flex`} title="Imprimir">
           <Printer size={16} />
         </button>
-
       </div>
     </header>
   )
