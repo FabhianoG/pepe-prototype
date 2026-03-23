@@ -2,42 +2,54 @@ import avatar from '../assets/avatar.png'
 
 export default function PepeWelcome() {
   return (
-    <div className="flex flex-col items-start gap-4 w-full max-w-xs">
+    <div className="flex flex-col items-center text-center gap-6 w-full max-w-xs mx-auto">
       
       {/* 📝 Texto */}
       <div>
         <h2 className="text-4xl font-bold text-[#0f172a]">¡Hola!</h2>
-        <p className="text-[#1f3c50] mt-2 text-sm leading-relaxed">
+        <p className="text-[#334155] mt-2 text-sm leading-relaxed">
           Soy Pepe, te ayudaré con cualquier problema de tu impresora.
         </p>
       </div>
 
-      {/* 🧑 Avatar con fondo decorativo */}
-      <div className="relative mt-6">
+      {/* 🧑 Avatar */}
+      <div className="relative mt-4 flex justify-center items-center">
         
-        {/* 🔷 Fondo MÁS GRANDE */}
+        {/* 🔷 Fondo inclinado */}
         <div
           className="
-          absolute
-          w-56 h-56
-          bg-linear-to-br
-          from-[#5aa9e6]
-          to-[#4e24b1]
-          rounded-2xl
-          rotate-6
-          top-8 left-6
-        "
+            absolute
+            w-52 h-52
+            bg-linear-to-br
+            from-[#5aa9e6]/70
+            to-[#4e24b1]/70
+            rounded-2xl
+            rotate-6
+            blur-md
+          "
         ></div>
 
-        {/* 🧑 Avatar MÁS GRANDE */}
+        {/* ✨ Glow */}
+        <div
+          className="
+            absolute
+            w-56 h-56
+            bg-[#5aa9e6]/20
+            rounded-full
+            blur-2xl
+          "
+        ></div>
+
+        {/* 🧑 Avatar */}
         <img
           src={avatar}
           alt="Pepe AI"
           className="
             relative
-            w-72
+            w-52
+            md:w-60
             object-contain
-            drop-shadow-2xl
+            drop-shadow-[0_25px_50px_rgba(0,0,0,0.2)]
           "
         />
       </div>

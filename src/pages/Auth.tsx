@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { Eye, EyeOff, Mail, Lock, Bot } from 'lucide-react'
+import { Eye, EyeOff, Mail, Lock } from 'lucide-react'
 import { login } from '../services/auth.service'
 import { useNavigate } from 'react-router-dom'
+import icon from '../assets/icon.png'
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false)
@@ -27,15 +28,21 @@ export default function Login() {
   return (
     <div className="min-h-screen flex">
       
-      {/* 🔵 LADO IZQUIERDO (SE QUEDA IGUAL) */}
+      {/* 🔵 LADO IZQUIERDO */}
       <div className="hidden md:flex w-1/2 bg-linear-to-r from-[#0F3D5E] to-[#1E6F9F] text-white flex-col justify-center items-center px-10 relative">
         
         <div className="absolute w-72 h-72 bg-white/10 rounded-full top-10 right-10"></div>
         <div className="absolute w-72 h-72 bg-white/10 rounded-full bottom-10 left-10"></div>
 
         <div className="z-10 text-center flex flex-col items-center">
-          <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mb-4 shadow-lg">
-            <Bot size={40} />
+          
+          {/* 🔥 SOLO ICONO (SIN FONDO) */}
+          <div className="mb-2 flex justify-center">
+            <img
+              src={icon}
+              alt="Pepe AI"
+              className="w-64 h-64 object-contain"
+            />
           </div>
 
           <h2 className="text-4xl font-bold mb-4">
@@ -48,7 +55,7 @@ export default function Login() {
         </div>
       </div>
 
-      {/* ⚪ LADO DERECHO MEJORADO */}
+      {/* ⚪ LADO DERECHO */}
       <div className="w-full md:w-1/2 bg-[#f5f9fc] flex items-center justify-center px-6">
         
         <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-sm border border-gray-100">

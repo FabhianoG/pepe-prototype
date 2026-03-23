@@ -1,14 +1,23 @@
-import { Bot } from 'lucide-react'
+import icon from '../../assets/icon.png'
 
 export default function ChatWelcome() {
   return (
     <div className="flex flex-col items-center justify-center text-center h-full">
       
-      <div className="w-20 h-20 rounded-full bg-[#5aa9e6] flex items-center justify-center text-white">
-        <Bot size={40} />
+      {/* Avatar */}
+      <div className="w-32 h-32 rounded-full overflow-hidden bg-white">
+        <img
+          src={icon}
+          alt="Bot"
+          className="w-full h-full object-contain"
+          style={{
+            imageRendering: 'crisp-edges', // mejora bordes en algunos navegadores
+          }}
+        />
       </div>
 
-      <p className="mt-3 text-gray-500 max-w-md">
+      {/* Texto */}
+      <p className="mt-4 text-gray-500 max-w-md text-sm leading-relaxed">
         Pregunta lo que quieras sobre impresoras, soporte técnico o análisis.
       </p>
 

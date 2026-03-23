@@ -2,11 +2,10 @@ import {
   Download,
   Printer,
   Expand,
-  ShieldCheck,
   RotateCcw,
   Menu,
   X,
-  Ticket
+  Headphones
 } from 'lucide-react'
 import { resetPepeState } from '../../services/pepe.service'
 
@@ -27,25 +26,30 @@ export default function ChatHeader({
   onToggleFullscreen,
   isFullscreen
 }: ChatHeaderProps) {
+
+  const btn =
+    "p-2 rounded-lg bg-gray-50 hover:bg-gray-100 active:scale-95 transition shadow-sm"
+
   return (
-    <div className="flex items-center justify-between px-3 sm:px-4 md:px-6 py-2.5 sm:py-3 border-b border-gray-200/60 bg-white/80 backdrop-blur-xl sticky top-0 z-10">
+    <header className="
+      w-full
+      flex items-center justify-between
+      px-3 sm:px-4 md:px-6
+      py-2.5 sm:py-3
+      border-b border-gray-200/60
+      bg-white/80 backdrop-blur-xl
+      sticky top-0 z-10
+    ">
 
       {/* IZQUIERDA */}
-      <div className="flex items-center gap-2 sm:gap-3">
+      <div className="flex items-center sm:gap-3 min-w-0">
 
-        <button
-          onClick={onMenu}
-          className="p-1.5 sm:p-2 rounded-lg hover:bg-gray-100 transition"
-        >
+        <button onClick={onMenu} className={`${btn} mr-4`}>
           {isOpen ? <X size={18} /> : <Menu size={18} />}
         </button>
 
-        <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-[#5aa9e6] flex items-center justify-center text-white shadow-sm">
-          <span className="text-xs sm:text-sm font-bold">P</span>
-        </div>
-
-        <div className="leading-tight">
-          <h1 className="text-sm sm:text-base font-semibold text-gray-800">
+        <div className="leading-tight truncate">
+          <h1 className="text-sm sm:text-base font-semibold text-gray-800 truncate">
             PEPE AI
           </h1>
           <p className="hidden sm:block text-xs text-gray-400">
@@ -53,58 +57,76 @@ export default function ChatHeader({
           </p>
         </div>
 
-        <span className="hidden md:flex items-center gap-1 text-xs text-green-600 bg-green-50 px-2 py-0.5 rounded-full ml-1">
+        <span className="
+          hidden md:flex items-center gap-1
+          text-xs text-green-600
+          bg-green-50 px-2 py-0.5
+          rounded-full ml-1
+        ">
           <span className="w-2 h-2 bg-green-500 rounded-full"></span>
           Activo
         </span>
       </div>
 
-      {/* DERECHA */}
-      <div className="flex items-center gap-1 sm:gap-2">
-
-        {/* SEGURIDAD */}
-        <div className="hidden lg:flex items-center gap-1 text-gray-500 bg-gray-100 px-2 py-1 rounded-lg text-xs">
-          <ShieldCheck size={14} /> Seguro
-        </div>
-
-        {/* 🎫 TICKET */}
+      {/* CENTRO */}
+      <div className="
+        flex-1 flex justify-center
+        px-2 sm:px-4
+      ">
         <button
           onClick={onGenerateTicket}
-          className="p-2 rounded-lg hover:bg-blue-50 text-gray-500 hover:text-[#5aa9e6] transition"
-          title="Generar ticket"
+          className="
+            flex items-center gap-2
+            px-3 sm:px-4 py-2
+            rounded-lg
+            bg-gray-50 hover:bg-gray-100
+            active:scale-95
+            transition shadow-sm
+            text-gray-700 hover:text-[#5aa9e6]
+            text-sm font-medium
+            whitespace-nowrap
+          "
         >
-          <Ticket size={16} />
+          <Headphones size={16} />
+          <span className="hidden sm:inline">
+            Soporte técnico
+          </span>
         </button>
+      </div>
 
-        {/* 🔲 FULLSCREEN */}
+      {/* DERECHA */}
+      <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+
+        {/* Fullscreen */}
         <button
           onClick={onToggleFullscreen}
-          className="hidden md:block p-2 rounded-lg hover:bg-gray-100 transition"
-          title="Pantalla completa"
+          className={`${btn} hidden md:flex`}
         >
           {isFullscreen ? <X size={16} /> : <Expand size={16} />}
         </button>
 
-        {/* RESET */}
+        {/* Reset */}
         <button
           onClick={() => {
             onReset()
             resetPepeState()
           }}
-          className="p-1.5 sm:p-2 rounded-lg hover:bg-gray-100 transition"
+          className={btn}
         >
           <RotateCcw size={15} />
         </button>
 
-        <button className="hidden sm:block p-2 rounded-lg hover:bg-gray-100 transition">
+        {/* Download */}
+        <button className={`${btn} hidden sm:flex`}>
           <Download size={16} />
         </button>
 
-        <button className="hidden sm:block p-2 rounded-lg hover:bg-gray-100 transition">
+        {/* Print */}
+        <button className={`${btn} hidden sm:flex`}>
           <Printer size={16} />
         </button>
 
       </div>
-    </div>
+    </header>
   )
 }

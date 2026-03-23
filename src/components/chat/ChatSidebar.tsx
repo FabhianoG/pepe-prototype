@@ -1,4 +1,4 @@
-import { MessageSquare, Search, Image } from 'lucide-react'
+import { MessageSquare, Search } from 'lucide-react'
 
 type Props = {
   isOpen: boolean
@@ -24,7 +24,7 @@ export default function ChatSidebar({ isOpen, onClose }: Props) {
           absolute top-0 left-0 h-full
           w-56 sm:w-60           
           z-20
-          bg-white backdrop-blur-xl
+          bg-white
           border-r border-white
           p-3 sm:p-4            
           flex flex-col
@@ -53,16 +53,6 @@ export default function ChatSidebar({ isOpen, onClose }: Props) {
           ">
             <Search size={15} />
             <span className="text-sm">Buscar</span>
-          </button>
-
-          <button className="
-            flex items-center gap-2
-            w-full px-3 py-2
-            rounded-lg
-            hover:bg-gray-100 transition
-          ">
-            <Image size={15} />
-            <span className="text-sm">Imágenes</span>
           </button>
 
         </div>

@@ -1,19 +1,16 @@
 export default function PepeInfoCard() {
   return (
-    <div className="w-full max-w-2xl">
+    <div className="w-full max-w-2xl mx-auto">
       
-      {/* 🧠 Título */}
-      <h3 className="text-2xl font-semibold text-[#0f172a]">
-        ¿Cómo aprovechar mejor a Pepe?
-      </h3>
-
-      {/* 📝 Descripción */}
-      <p className="text-[#1f3c50] mt-2 text-sm leading-relaxed">
-        Sigue estos pasos para obtener soluciones rápidas y precisas.
-      </p>
+      {/* 🧠 Título + descripción centrados */}
+      <div className="text-center">
+        <h3 className="text-2xl font-semibold text-[#0f172a]">
+          ¿Cómo aprovechar mejor a Pepe?
+        </h3>
+      </div>
 
       {/* 🔥 INFOGRAFÍA */}
-      <div className="mt-8 relative">
+      <div className="mt-6 relative">
         
         {/* Línea vertical */}
         <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-[#5aa9e6]/40"></div>
@@ -22,13 +19,10 @@ export default function PepeInfoCard() {
           
           {/* 🔹 PASO 1 */}
           <div className="flex items-start gap-4 relative">
-            
-            {/* Número */}
             <div className="w-8 h-8 flex items-center justify-center rounded-full bg-[#5aa9e6] text-white font-bold text-sm shadow-md">
               1
             </div>
 
-            {/* Contenido */}
             <div>
               <h4 className="text-sm font-semibold text-[#0f172a]">
                 Describe el problema
@@ -47,7 +41,6 @@ export default function PepeInfoCard() {
 
           {/* 🔹 PASO 2 */}
           <div className="flex items-start gap-4 relative">
-            
             <div className="w-8 h-8 flex items-center justify-center rounded-full bg-[#4e24b1] text-white font-bold text-sm shadow-md">
               2
             </div>
@@ -73,7 +66,6 @@ export default function PepeInfoCard() {
 
           {/* 🔹 PASO 3 */}
           <div className="flex items-start gap-4 relative">
-            
             <div className="w-8 h-8 flex items-center justify-center rounded-full bg-[#5aa9e6] text-white font-bold text-sm shadow-md">
               3
             </div>
@@ -89,6 +81,28 @@ export default function PepeInfoCard() {
                 </li>
                 <li className="text-sm text-[#1f3c50]">
                   • Si no funciona, brinda más información
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* 🔹 PASO 4 (nuevo) */}
+          <div className="flex items-start gap-4 relative">
+            <div className="w-8 h-8 flex items-center justify-center rounded-full bg-[#4e24b1] text-white font-bold text-sm shadow-md">
+              4
+            </div>
+
+            <div>
+              <h4 className="text-sm font-semibold text-[#0f172a]">
+                Confirma la solución
+              </h4>
+
+              <ul className="mt-2 space-y-1">
+                <li className="text-sm text-[#1f3c50]">
+                  • Verifica que tu impresora funcione correctamente
+                </li>
+                <li className="text-sm text-[#1f3c50]">
+                  • Si el problema persiste, continúa la conversación
                 </li>
               </ul>
             </div>

@@ -12,7 +12,7 @@ export default function MainLayout({
         bg-linear-to-br
         from-[#dce9eb]
         via-[#6caedf]
-        to-[#bedadc]
+        to-[#aa9bec]
       "
     >
       <Header />

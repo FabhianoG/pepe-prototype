@@ -7,6 +7,14 @@ const users: User[] = [
     email: "admin@test.com",
     password: "Protecso123",
   },
+  {
+    id: 2,
+    name: "Fabiano",
+    lastName: "Guerrero",
+    email: "fabiano.guerrero@protecso.com.pe",
+    password: "Protecso123",
+    empresa: "Protecso",
+  },
 ];
 
 export const login = (email: string, password: string): User | null => {
