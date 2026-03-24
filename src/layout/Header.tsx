@@ -17,7 +17,7 @@ export default function Header() {
     sessionStorage.clear()
 
     // redirigir
-    navigate('/login', { replace: true })
+    navigate('/', { replace: true })
   }
 
   return (
