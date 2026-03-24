@@ -15,6 +15,12 @@ export default function Home() {
     }
   }, [navigate])
 
+  useEffect(() => {
+    requestAnimationFrame(() => {
+      window.scrollTo(0, 0)
+    })
+  }, [])
+
   return (
     <MainLayout>
       <div className="w-full flex justify-center py-6 px-4">
