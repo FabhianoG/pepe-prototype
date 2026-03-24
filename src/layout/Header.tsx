@@ -10,8 +10,14 @@ export default function Header() {
   const navigate = useNavigate()
 
   const handleLogout = () => {
+    // limpiar todo
     localStorage.removeItem('user')
-    window.location.reload()
+
+    // opcional: limpiar más cosas si tienes
+    sessionStorage.clear()
+
+    // redirigir
+    navigate('/login', { replace: true })
   }
 
   return (
@@ -40,9 +46,7 @@ export default function Header() {
             />
           </div>
 
-          <span className="font-semibold text-gray-800 text-base">
-            PEPE AI
-          </span>
+          <span className="font-semibold text-gray-800 text-base">PEPE AI</span>
         </div>
 
         {/* 🧭 NAV DESKTOP */}
@@ -178,21 +182,13 @@ export default function Header() {
         <div className="fixed top-0 left-0 w-full h-full bg-black/30 backdrop-blur-sm z-900">
           <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[90%] max-w-sm bg-white rounded-xl shadow-lg p-4">
             <div className="flex flex-col gap-4 text-gray-700">
-              <button onClick={() => navigate('/home')}>
-                Agente Pepe
-              </button>
+              <button onClick={() => navigate('/home')}>Agente Pepe</button>
 
-              <button onClick={() => navigate('/conocenos')}>
-                Conócenos
-              </button>
+              <button onClick={() => navigate('/conocenos')}>Conócenos</button>
 
-              <button onClick={() => navigate('/faq')}>
-                Preguntas
-              </button>
+              <button onClick={() => navigate('/faq')}>Preguntas</button>
 
-              <button onClick={() => navigate('/dashboard')}>
-                Dashboard
-              </button>
+              <button onClick={() => navigate('/dashboard')}>Dashboard</button>
 
               <hr />
 
