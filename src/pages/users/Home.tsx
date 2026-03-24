@@ -1,9 +1,9 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import PepeWelcome from '../components/PepeWelcome'
-import PepeInfoCard from '../components/PepeInfoCard'
-import ChatLayout from '../components/chat/ChatLayout'
-import MainLayout from '../layout/MainLayout'
+import PepeWelcome from '../../components/PepeWelcome'
+import PepeInfoCard from '../../components/PepeInfoCard'
+import ChatLayout from '../../components/chat/ChatLayout'
+import MainLayout from '../../layout/MainLayout'
 
 export default function Home() {
   const navigate = useNavigate()

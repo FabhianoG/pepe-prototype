@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react'
-import { login } from '../services/auth.service'
+import { login } from '../../services/auth.service'
 import { useNavigate } from 'react-router-dom'
-import icon from '../assets/icon.webp'
-import LoadingScreen from '../components/LoadingScreen'
+import icon from '../../assets/icon.webp'
+import LoadingScreen from '../../components/LoadingScreen'
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false)
@@ -48,15 +48,25 @@ export default function Login() {
   }
 
   if (loading) {
-    return <LoadingScreen onFinish={() => navigate('/home')} />
+    return (
+      <LoadingScreen
+        onFinish={() => {
+          const storedUser = JSON.parse(localStorage.getItem('user') || '{}')
+
+          if (storedUser.role === 'ADMIN') {
+            navigate('/admin')
+          } else {
+            navigate('/home')
+          }
+        }}
+      />
+    )
   }
 
   return (
     <div className="min-h-screen flex">
-
       {/* 🔵 LADO IZQUIERDO */}
       <div className="hidden md:flex w-1/2 bg-linear-to-r from-[#0F3D5E] to-[#1E6F9F] text-white flex-col justify-center items-center px-10 relative">
-
         <div className="absolute w-72 h-72 bg-white/10 rounded-full top-10 right-10"></div>
         <div className="absolute w-72 h-72 bg-white/10 rounded-full bottom-10 left-10"></div>
 
@@ -69,9 +79,7 @@ export default function Login() {
             />
           </div>
 
-          <h2 className="text-4xl font-bold mb-4">
-            Bienvenido a PEPE
-          </h2>
+          <h2 className="text-4xl font-bold mb-4">Bienvenido a PEPE</h2>
 
           <p className="text-lg opacity-90">
             Tu asistente inteligente de Misión Tecnológica
@@ -81,9 +89,7 @@ export default function Login() {
 
       {/* ⚪ LADO DERECHO */}
       <div className="w-full md:w-1/2 bg-[#f5f9fc] flex items-center justify-center px-6">
-
         <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
-
           <h2 className="text-3xl font-semibold text-gray-800 mb-2">
             Iniciar sesión
           </h2>
@@ -93,7 +99,6 @@ export default function Login() {
           </p>
 
           <form className="space-y-5" onSubmit={handleSubmit}>
-
             {/* Email */}
             <div>
               <label className="block text-sm text-gray-600 mb-1">
@@ -101,7 +106,10 @@ export default function Login() {
               </label>
 
               <div className="relative">
-                <Mail className="absolute left-3 top-3 text-gray-400" size={18} />
+                <Mail
+                  className="absolute left-3 top-3 text-gray-400"
+                  size={18}
+                />
 
                 <input
                   type="email"
@@ -120,7 +128,10 @@ export default function Login() {
               </label>
 
               <div className="relative">
-                <Lock className="absolute left-3 top-3 text-gray-400" size={18} />
+                <Lock
+                  className="absolute left-3 top-3 text-gray-400"
+                  size={18}
+                />
 
                 <input
                   type={showPassword ? 'text' : 'password'}
@@ -161,7 +172,6 @@ export default function Login() {
             >
               Iniciar sesión
             </button>
-
           </form>
         </div>
       </div>
@@ -169,16 +179,11 @@ export default function Login() {
       {/* 🔥 MODAL RECUPERAR */}
       {showRecover && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-
           <div className="bg-white p-6 rounded-2xl w-full max-w-sm shadow-lg">
-
-            <h3 className="text-xl font-semibold mb-2">
-              Recuperar contraseña
-            </h3>
+            <h3 className="text-xl font-semibold mb-2">Recuperar contraseña</h3>
 
             {!recoverSent ? (
               <form onSubmit={handleRecover} className="space-y-4">
-
                 <input
                   type="email"
                   placeholder="Ingresa tu correo"
@@ -193,7 +198,6 @@ export default function Login() {
                 >
                   Enviar enlace
                 </button>
-
               </form>
             ) : (
               <p className="text-sm text-gray-600">
@@ -207,11 +211,9 @@ export default function Login() {
             >
               Cerrar
             </button>
-
           </div>
         </div>
       )}
-
     </div>
   )
 }

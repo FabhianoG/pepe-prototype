@@ -1,4 +1,4 @@
-import MainLayout from '../layout/MainLayout'
+import MainLayout from '../../layout/MainLayout'
 import { Rocket, Lightbulb, Zap, ShieldCheck, Target } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
@@ -9,7 +9,6 @@ export default function Conocenos() {
     <MainLayout>
       <div className="w-full flex justify-center px-4 py-12">
         <div className="max-w-5xl w-full">
-
           {/* 🧠 HERO */}
           <div className="text-center">
             <h1 className="text-4xl sm:text-5xl font-bold text-[#0f172a]">
@@ -17,14 +16,13 @@ export default function Conocenos() {
             </h1>
 
             <p className="mt-4 text-gray-600 max-w-2xl mx-auto leading-relaxed">
-              Automatiza procesos, responde consultas y mejora la experiencia digital
-              de tus usuarios con inteligencia artificial moderna.
+              Automatiza procesos, responde consultas y mejora la experiencia
+              digital de tus usuarios con inteligencia artificial moderna.
             </p>
           </div>
 
           {/* ✨ MISIÓN Y VISIÓN */}
           <div className="mt-12 grid md:grid-cols-2 gap-6">
-
             {/* MISIÓN */}
             <div className="bg-white/70 backdrop-blur-xl p-6 rounded-2xl shadow-md border hover:shadow-xl transition group">
               <div className="w-12 h-12 flex items-center justify-center rounded-xl bg-[#5aa9e6]/10 text-[#5aa9e6]">
@@ -52,11 +50,10 @@ export default function Conocenos() {
               </h3>
 
               <p className="text-gray-600 mt-2 text-sm leading-relaxed">
-                Ser una plataforma líder en soluciones AI accesibles,
-                escalables y centradas en el usuario.
+                Ser una plataforma líder en soluciones AI accesibles, escalables
+                y centradas en el usuario.
               </p>
             </div>
-
           </div>
 
           {/* 📊 VALORES */}
@@ -66,7 +63,6 @@ export default function Conocenos() {
             </h2>
 
             <div className="mt-6 grid sm:grid-cols-3 gap-5">
-
               {/* VALOR 1 */}
               <div className="bg-white/60 backdrop-blur-lg p-5 rounded-xl border text-center hover:shadow-md transition">
                 <div className="w-10 h-10 mx-auto flex items-center justify-center rounded-lg bg-[#5aa9e6]/10 text-[#5aa9e6]">
@@ -95,11 +91,8 @@ export default function Conocenos() {
                   <Target size={18} />
                 </div>
                 <p className="mt-3 font-medium">Resultados</p>
-                <p className="text-xs text-gray-500 mt-1">
-                  Enfoque en impacto
-                </p>
+                <p className="text-xs text-gray-500 mt-1">Enfoque en impacto</p>
               </div>
-
             </div>
           </div>
 
@@ -120,7 +113,6 @@ export default function Conocenos() {
               Ir al Agente Pepe
             </button>
           </div>
-          
         </div>
       </div>
     </MainLayout>

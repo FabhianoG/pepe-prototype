@@ -1,8 +1,8 @@
 import { useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { LogOut, Building2, Mail, User as UserIcon } from 'lucide-react'
-import type { User } from '../types/user'
-import MainLayout from '../layout/MainLayout'
+import type { User } from '../../types/user'
+import MainLayout from '../../layout/MainLayout'
 
 export default function Profile() {
   const navigate = useNavigate()

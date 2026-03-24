@@ -1,5 +1,5 @@
-import MainLayout from '../layout/MainLayout'
-import { getStats, getTickets } from '../services/dashboard.service'
+import MainLayout from '../../layout/MainLayout'
+import { getStats, getTickets } from '../../services/dashboard.service'
 import { Eye } from 'lucide-react'
 
 export default function Dashboard() {

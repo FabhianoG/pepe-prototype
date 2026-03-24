@@ -1,25 +1,25 @@
-import type { User } from "../types/user";
+import type { User } from '../types/user'
 
 const users: User[] = [
   {
     id: 1,
-    name: "Admin",
-    email: "admin@test.com",
-    password: "Protecso123",
+    name: 'Admin',
+    email: 'admin@test.com',
+    password: 'Protecso123',
+    role: 'ADMIN',
   },
   {
     id: 2,
-    name: "Fabiano",
-    lastName: "Guerrero",
-    email: "fabiano.guerrero@protecso.com.pe",
-    password: "Protecso123",
-    empresa: "Protecso",
+    name: 'Fabiano',
+    lastName: 'Guerrero',
+    email: 'fabiano.guerrero@protecso.com.pe',
+    password: 'Protecso123',
+    empresa: 'Protecso',
+    role: 'USER',
   },
-];
+]
 
 export const login = (email: string, password: string): User | null => {
-  const user = users.find(
-    (u) => u.email === email && u.password === password
-  );
-  return user || null;
-};
+  const user = users.find((u) => u.email === email && u.password === password)
+  return user || null
+}

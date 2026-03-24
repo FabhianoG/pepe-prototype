@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import MainLayout from '../layout/MainLayout'
+import MainLayout from '../../layout/MainLayout'
 import { ChevronDown, HelpCircle } from 'lucide-react'
 
 const faqs = [
