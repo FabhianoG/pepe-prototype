@@ -1,6 +1,17 @@
+import { useState } from 'react'
 import avatar from '../assets/avatar.webp'
 
 export default function PepeWelcome() {
+  // 🔥 Controla si la imagen ya cargó (para animación suave)
+  const [loaded, setLoaded] = useState(
+    sessionStorage.getItem('pepe_loaded') === 'true'
+  )
+
+  const handleLoad = () => {
+    setLoaded(true)
+    sessionStorage.setItem('pepe_loaded', 'true')
+  }
+
   return (
     <div className="flex flex-col items-center text-center gap-6 w-full max-w-xs mx-auto">
       
@@ -40,17 +51,24 @@ export default function PepeWelcome() {
           "
         ></div>
 
-        {/* 🧑 Avatar */}
+        {/* 🧑 Avatar con animación */}
         <img
           src={avatar}
           alt="Pepe AI"
-          className="
+          onLoad={handleLoad}
+          className={`
             relative
             w-52
             md:w-60
             object-contain
             drop-shadow-[0_25px_50px_rgba(0,0,0,0.2)]
-          "
+            transition-all duration-700 ease-out
+            ${
+              loaded
+                ? 'opacity-100 translate-y-0 scale-100 rotate-0'
+                : 'opacity-0 translate-y-10 scale-90 rotate-3'
+            }
+          `}
         />
       </div>
     </div>
