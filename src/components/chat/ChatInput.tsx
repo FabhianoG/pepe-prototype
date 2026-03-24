@@ -40,6 +40,7 @@ const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
 
     const messagesEndRef = useRef<HTMLDivElement | null>(null)
     const inputRef = useRef<HTMLInputElement | null>(null)
+    const shouldScrollRef = useRef(false) // 🔥 NUEVO (clave)
 
     const hasSaved = useRef<boolean>(!!activeChat)
     const chatIdRef = useRef<string | null>(activeChat?.id || null)
@@ -48,11 +49,15 @@ const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
     }
 
+    // 🔥 SCROLL SOLO CUANDO DEBE
     useEffect(() => {
-      scrollToBottom()
+      if (shouldScrollRef.current) {
+        scrollToBottom()
+        shouldScrollRef.current = false
+      }
     }, [messages, loading])
 
-    // 🔥 FIX REAL DEL FOCUS
+    // 🔥 FIX FOCUS
     useEffect(() => {
       if (!showWelcome) {
         inputRef.current?.focus()
@@ -101,6 +106,7 @@ const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
         { text: 'Quiero generar un ticket de soporte', sender: 'user' },
       ]
 
+      shouldScrollRef.current = true // 🔥
       setMessages(newMessages)
       setLoading(true)
 
@@ -112,6 +118,7 @@ const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
           { text: botText, sender: 'bot' },
         ]
 
+        shouldScrollRef.current = true // 🔥
         setMessages(updated)
 
         let newChat: Chat | null = null
@@ -162,6 +169,7 @@ const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
         { text: userText, sender: 'user' },
       ]
 
+      shouldScrollRef.current = true // 🔥
       setMessages(newMessages)
       setMessage('')
       setLoading(true)
@@ -186,6 +194,7 @@ const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
           { text: botText, sender: 'bot' },
         ]
 
+        shouldScrollRef.current = true // 🔥
         setMessages(updated)
 
         let newChat: Chat | null = null
@@ -239,10 +248,7 @@ const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
           </AnimatePresence>
 
           {!showWelcome && (
-            <div
-              className="max-w-3xl mx-auto space-y-6"
-              style={{ willChange: 'transform' }}
-            >
+            <div className="max-w-3xl mx-auto space-y-6">
               {messages.map((msg, i) => (
                 <motion.div
                   key={i}
@@ -263,19 +269,14 @@ const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
                 >
                   {msg.sender === 'bot' && (
                     <div className="w-12 h-12 flex items-center justify-center">
-                      <img
-                        src={pepeIcon}
-                        alt="pepe"
-                        className="w-20 h-20 object-contain"
-                      />
+                      <img src={pepeIcon} className="w-20 h-20 object-contain" />
                     </div>
                   )}
 
                   <div
                     className={`
                       px-4 py-2.5 rounded-2xl text-sm max-w-[70%]
-                      leading-relaxed
-                      break-words whitespace-pre-wrap overflow-hidden
+                      leading-relaxed wrap-break-word whitespace-pre-wrap overflow-hidden
                       ${
                         msg.sender === 'user'
                           ? 'bg-blue-600 text-white shadow-sm'
@@ -296,17 +297,10 @@ const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
 
               {loading && (
                 <div className="flex items-end gap-3">
-                  <div className="w-9 h-9 flex items-center justify-center">
-                    <img
-                      src={pepeIcon}
-                      alt="pepe"
-                      className="w-16 h-16 object-contain"
-                    />
-                  </div>
-
+                  <img src={pepeIcon} className="w-16 h-16 object-contain" />
                   <div className="bg-white/80 border border-slate-200 rounded-2xl px-4 py-3 flex gap-1">
-                    <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
-                    <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+                    <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce"></span>
+                    <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce"></span>
                     <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce"></span>
                   </div>
                 </div>
@@ -321,21 +315,20 @@ const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
           <div className="max-w-3xl mx-auto flex items-center gap-2 bg-white/90 border border-slate-200/60 rounded-2xl px-3 py-2 shadow-sm">
             <input
               ref={inputRef}
-              type="text"
-              placeholder="Escribe tu mensaje..."
-              className="flex-1 px-3 py-2 text-sm bg-transparent outline-none text-slate-800 placeholder:text-slate-400"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+              className="flex-1 px-3 py-2 text-sm bg-transparent outline-none"
+              placeholder="Escribe tu mensaje..."
             />
 
-            <button className="text-slate-400 hover:text-slate-600 p-2 transition">
+            <button className="text-slate-400 p-2">
               <Mic size={18} />
             </button>
 
             <button
               onClick={handleSend}
-              className="bg-blue-600 hover:bg-blue-700 text-white p-2.5 rounded-xl transition"
+              className="bg-blue-600 text-white p-2.5 rounded-xl"
             >
               <Send size={16} />
             </button>

@@ -1,4 +1,5 @@
 import { Routes, Route } from 'react-router-dom'
+import ScrollToTop from './components/ScrollToTop' 
 import Auth from './pages/Auth'
 import Home from './pages/Home'
 import Profile from './pages/Profile'
@@ -8,18 +9,18 @@ import Dashboard from './pages/Dashboard'
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Auth />} />
-      {/*LANDING PRINCIPAL */}
-      <Route path="/home" element={<Home />} />
-      {/*PERFIL */}
-      <Route path="/profile" element={<Profile />} />
-
-      {/*NUEVAS VISTAS */}
-      <Route path="/conocenos" element={<Conocenos />} />
-      <Route path="/faq" element={<Preguntas />} />
-      <Route path="/dashboard" element={<Dashboard />} />
-    </Routes>
+    <>
+      <ScrollToTop />
+      
+      <Routes>
+        <Route path="/" element={<Auth />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/conocenos" element={<Conocenos />} />
+        <Route path="/faq" element={<Preguntas />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+      </Routes>
+    </>
   )
 }
 
