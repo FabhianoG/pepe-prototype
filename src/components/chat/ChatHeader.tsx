@@ -8,7 +8,7 @@ import {
   Headphones,
 } from 'lucide-react'
 import { resetPepeState } from '../../services/pepe.service'
-import { resetTicketState } from '../../services/ticket.service' // 🔥 NUEVO
+import { resetTicketState } from '../../services/ticket.service'
 
 type ChatHeaderProps = {
   onReset: () => void

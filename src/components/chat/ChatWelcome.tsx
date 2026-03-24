@@ -1,4 +1,4 @@
-import icon from '../../assets/icon1.png'
+import icon from '../../assets/icon1.webp'
 import { motion } from 'framer-motion'
 
 export default function ChatWelcome() {

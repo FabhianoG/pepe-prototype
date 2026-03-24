@@ -11,7 +11,7 @@ import { getPepeResponse } from '../../services/pepe.service'
 import { handleTicketFlow, isTicketActive } from '../../services/ticket.service'
 import { updateChat, type Chat } from '../../services/chat.service'
 import ChatWelcome from './ChatWelcome'
-import pepeIcon from '../../assets/icon.png'
+import pepeIcon from '../../assets/icon.webp'
 
 type Message = {
   text: string

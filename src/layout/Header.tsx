@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { ChevronDown, LogOut, User, Menu, X } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import icon from '../assets/icon1.png'
+import icon from '../assets/icon1.webp'
 
 export default function Header() {
   const user = JSON.parse(localStorage.getItem('user') || 'null')

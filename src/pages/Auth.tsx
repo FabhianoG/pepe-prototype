@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react'
 import { login } from '../services/auth.service'
 import { useNavigate } from 'react-router-dom'
-import icon from '../assets/icon.png'
+import icon from '../assets/icon.webp'
 import LoadingScreen from '../components/LoadingScreen'
 
 export default function Login() {

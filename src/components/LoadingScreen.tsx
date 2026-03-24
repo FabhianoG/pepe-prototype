@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import icon from '../assets/icon.png'
+import icon from '../assets/icon.webp'
 
 type Props = {
   onFinish: () => void
@@ -43,13 +43,13 @@ export default function LoadingScreen({ onFinish }: Props) {
         {/* Logo PRO */}
         <div className="relative flex items-center justify-center">
           {/* Glow grande */}
-          <div className="absolute w-52 h-52 bg-blue-500/20 blur-2xl rounded-full animate-pulse"></div>
+          <div className="absolute w-64 h-64 bg-blue-500/20 blur-2xl rounded-full animate-pulse"></div>
 
           {/* Logo */}
           <img
             src={icon}
             alt="Pepe AI"
-            className="w-44 h-44 object-contain relative z-10 animate-[float_4s_ease-in-out_infinite] drop-shadow-2xl"
+            className="w-84 h-84 object-contain relative z-10 animate-[float_4s_ease-in-out_infinite] drop-shadow-2xl"
           />
         </div>
 
