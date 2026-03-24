@@ -73,7 +73,7 @@ export default function ChatLayout() {
       `}
     >
       <ChatHeader
-        onReset={() => window.location.reload()}
+        onReset={handleNewChat}
         onMenu={() => setSidebarOpen(!sidebarOpen)}
         isOpen={sidebarOpen}
         onGenerateTicket={handleGenerateTicket}
