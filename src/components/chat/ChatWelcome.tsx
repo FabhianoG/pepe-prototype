@@ -4,10 +4,13 @@ import { motion } from 'framer-motion'
 export default function ChatWelcome() {
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.96 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.96 }}
-      transition={{ duration: 0.3, ease: 'easeOut' }}
+      initial={{ opacity: 0, y: 30, scale: 0.98 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: -30, scale: 0.98 }}
+      transition={{
+        duration: 0.35,
+        ease: [0.4, 0, 0.2, 1],
+      }}
       style={{ willChange: 'transform, opacity' }}
       className="flex flex-col items-center justify-center text-center h-full px-4"
     >
@@ -24,7 +27,7 @@ export default function ChatWelcome() {
           border border-white/40
         "
       >
-        {/* 🔥 Glow SIN blur */}
+        {/* Glow */}
         <div className="absolute w-36 h-36 bg-blue-400/10 rounded-full"></div>
 
         <img

@@ -84,7 +84,7 @@ const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
 
         setMessages(updated)
 
-        let newChat: Chat | null = null // 🔥 FIX
+        let newChat: Chat | null = null
 
         if (!hasSaved.current) {
           newChat = {
@@ -158,7 +158,7 @@ const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
 
         setMessages(updated)
 
-        let newChat: Chat | null = null // 🔥 FIX
+        let newChat: Chat | null = null
 
         if (!hasSaved.current) {
           newChat = {
@@ -191,9 +191,9 @@ const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
       <div className="flex flex-col h-full bg-transparent">
         <div
           className={`
-    flex-1 overflow-y-auto px-6
-    ${showWelcome ? 'flex items-center justify-center' : 'pt-6 pb-32'}
-  `}
+            flex-1 overflow-y-auto overflow-x-hidden px-6
+            ${showWelcome ? 'flex items-center justify-center' : 'pt-6 pb-32'}
+          `}
         >
           <AnimatePresence>
             {showWelcome && (
@@ -234,6 +234,7 @@ const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
                     className={`
                       px-4 py-2.5 rounded-2xl text-sm max-w-[70%]
                       leading-relaxed
+                      wrap-break-word whitespace-pre-wrap overflow-hidden
                       ${
                         msg.sender === 'user'
                           ? 'bg-blue-600 text-white shadow-sm'
