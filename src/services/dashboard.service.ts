@@ -1,15 +1,12 @@
-// services/dashboard.service.ts
-
 import {
   Ticket,
   CheckCircle,
   Clock,
-  AlertTriangle
 } from 'lucide-react'
 
-import type { Stat, TicketItem, ActivityItem } from '../types/dashboard'
+import type { Stat, TicketItem } from '../types/dashboard'
 
-// 🔹 STATS
+// STATS
 export const getStats = (): Stat[] => [
   {
     title: 'Tickets generados',
@@ -33,48 +30,50 @@ export const getStats = (): Stat[] => [
     bg: 'bg-yellow-500/10'
   },
   {
-    title: 'Críticos',
-    value: 10,
-    icon: AlertTriangle,
-    color: 'text-red-500',
-    bg: 'bg-red-500/10'
+    title: 'En proceso',
+    value: 15,
+    icon: Clock,
+    color: 'text-blue-500',
+    bg: 'bg-blue-500/10'
   }
 ]
 
-// 🔹 TICKETS
+// TICKETS
 export const getTickets = (): TicketItem[] => [
   {
     id: '#123',
     problem: 'Atasco de papel',
     printer: 'HP LaserJet',
-    status: 'resuelto'
+    status: 'resuelto',
+    priority: 'media',
+    date: '2026-03-20',
+    client: 'Empresa ABC'
   },
   {
     id: '#124',
     problem: 'No imprime',
     printer: 'Epson L3150',
-    status: 'pendiente'
+    status: 'pendiente',
+    priority: 'alta',
+    date: '2026-03-21',
+    client: 'Tech Solutions'
   },
   {
     id: '#125',
     problem: 'Error de conexión',
     printer: 'Canon G3110',
-    status: 'critico'
-  }
-]
-
-// 🔹 ACTIVIDAD PEPE
-export const getActivity = (): ActivityItem[] => [
-  {
-    message: 'Pepe resolvió problema de impresión',
-    type: 'success'
+    status: 'en_proceso',
+    priority: 'alta',
+    date: '2026-03-22',
+    client: 'Logística Perú'
   },
   {
-    message: 'Impresora offline detectada',
-    type: 'warning'
-  },
-  {
-    message: 'Error crítico en cola de impresión',
-    type: 'error'
+    id: '#126',
+    problem: 'Impresión borrosa',
+    printer: 'Brother DCP',
+    status: 'en_pausa',
+    priority: 'media',
+    date: '2026-03-22',
+    client: 'Oficinas SAC'
   }
 ]

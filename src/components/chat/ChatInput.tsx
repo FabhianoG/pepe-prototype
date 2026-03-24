@@ -1,8 +1,17 @@
-import { Mic, Send, User, Bot } from 'lucide-react'
-import { useState, useRef, useEffect, forwardRef, useImperativeHandle } from 'react'
+import { Mic, Send, User } from 'lucide-react'
+import {
+  useState,
+  useRef,
+  useEffect,
+  forwardRef,
+  useImperativeHandle,
+} from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { getPepeResponse } from '../../services/pepe.service'
+import { handleTicketFlow, isTicketActive } from '../../services/ticket.service'
 import { updateChat, type Chat } from '../../services/chat.service'
 import ChatWelcome from './ChatWelcome'
+import pepeIcon from '../../assets/icon.png'
 
 type Message = {
   text: string
@@ -11,7 +20,7 @@ type Message = {
 
 type ChatInputProps = {
   activeChat?: Chat | null
-  onChatCreated?: () => void
+  onChatCreated?: (chat: Chat) => void
 }
 
 export type ChatInputRef = {
@@ -21,12 +30,13 @@ export type ChatInputRef = {
 
 const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
   ({ activeChat, onChatCreated }, ref) => {
-
     const [message, setMessage] = useState('')
     const [loading, setLoading] = useState(false)
     const [messages, setMessages] = useState<Message[]>(
       activeChat?.messages || [],
     )
+
+    const [showWelcome, setShowWelcome] = useState(messages.length === 0)
 
     const messagesEndRef = useRef<HTMLDivElement | null>(null)
     const hasSaved = useRef<boolean>(!!activeChat)
@@ -40,17 +50,21 @@ const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
       scrollToBottom()
     }, [messages, loading])
 
-    // 🔥 RESTAURADO (CLAVE)
     const handleNewChat = () => {
       setMessages([])
       setMessage('')
       setLoading(false)
       hasSaved.current = false
       chatIdRef.current = null
+      setShowWelcome(true)
     }
 
     const generateTicket = () => {
-      const ticketNumber = `TCK-${Math.floor(100000 + Math.random() * 900000)}`
+      if (messages.length === 0) {
+        setShowWelcome(false)
+      }
+
+      const userText = 'ticket'
 
       const newMessages: Message[] = [
         ...messages,
@@ -61,25 +75,44 @@ const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
       setLoading(true)
 
       setTimeout(() => {
+        const botText = handleTicketFlow(userText) || ''
+
         const updated: Message[] = [
           ...newMessages,
-          {
-            text: `Ticket generado correctamente.\nNúmero: ${ticketNumber}`,
-            sender: 'bot',
-          },
+          { text: botText, sender: 'bot' },
         ]
 
         setMessages(updated)
 
-        if (chatIdRef.current) {
+        let newChat: Chat | null = null // 🔥 FIX
+
+        if (!hasSaved.current) {
+          newChat = {
+            id: `chat-${Date.now()}`,
+            title: 'Ticket de soporte',
+            messages: updated,
+          }
+
+          const chats = JSON.parse(localStorage.getItem('pepe_chats') || '[]')
+          localStorage.setItem(
+            'pepe_chats',
+            JSON.stringify([newChat, ...chats]),
+          )
+
+          chatIdRef.current = newChat.id
+          hasSaved.current = true
+        } else if (chatIdRef.current) {
           updateChat(chatIdRef.current, updated)
         }
 
+        if (newChat) {
+          onChatCreated?.(newChat)
+        }
+
         setLoading(false)
-      }, 700)
+      }, 500)
     }
 
-    // 🔥 ESTO SOLUCIONA TODO
     useImperativeHandle(ref, () => ({
       generateTicket,
       newChat: handleNewChat,
@@ -87,6 +120,10 @@ const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
 
     const handleSend = () => {
       if (!message.trim()) return
+
+      if (messages.length === 0) {
+        setShowWelcome(false)
+      }
 
       const userText = message
 
@@ -100,15 +137,31 @@ const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
       setLoading(true)
 
       setTimeout(() => {
+        let botText = ''
+
+        if (isTicketActive()) {
+          botText = handleTicketFlow(userText) || ''
+        } else {
+          const ticketResponse = handleTicketFlow(userText)
+
+          if (ticketResponse) {
+            botText = ticketResponse
+          } else {
+            botText = getPepeResponse(userText)
+          }
+        }
+
         const updated: Message[] = [
           ...newMessages,
-          { text: getPepeResponse(userText), sender: 'bot' },
+          { text: botText, sender: 'bot' },
         ]
 
         setMessages(updated)
 
+        let newChat: Chat | null = null // 🔥 FIX
+
         if (!hasSaved.current) {
-          const newChat = {
+          newChat = {
             id: `chat-${Date.now()}`,
             title: userText.slice(0, 30),
             messages: updated,
@@ -126,20 +179,40 @@ const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
           updateChat(chatIdRef.current, updated)
         }
 
-        onChatCreated?.()
+        if (newChat) {
+          onChatCreated?.(newChat)
+        }
+
         setLoading(false)
       }, 700)
     }
 
     return (
       <div className="flex flex-col h-full bg-transparent">
+        <div
+          className={`
+    flex-1 overflow-y-auto px-6
+    ${showWelcome ? 'flex items-center justify-center' : 'pt-6 pb-32'}
+  `}
+        >
+          <AnimatePresence>
+            {showWelcome && (
+              <motion.div
+                initial={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.96 }}
+                transition={{ duration: 0.3, ease: 'easeOut' }}
+                style={{ willChange: 'transform, opacity' }}
+              >
+                <ChatWelcome />
+              </motion.div>
+            )}
+          </AnimatePresence>
 
-        <div className="flex-1 overflow-y-auto px-6 py-24 pb-32">
-          {messages.length === 0 ? (
-            <ChatWelcome />
-          ) : (
-            <div className="max-w-3xl mx-auto space-y-6">
-
+          {!showWelcome && (
+            <div
+              className="max-w-3xl mx-auto space-y-6"
+              style={{ willChange: 'transform' }}
+            >
               {messages.map((msg, i) => (
                 <div
                   key={i}
@@ -148,8 +221,12 @@ const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
                   }`}
                 >
                   {msg.sender === 'bot' && (
-                    <div className="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center">
-                      <Bot size={16} className="text-blue-600" />
+                    <div className="w-12 h-12 flex items-center justify-center">
+                      <img
+                        src={pepeIcon}
+                        alt="pepe"
+                        className="w-20 h-20 object-contain"
+                      />
                     </div>
                   )}
 
@@ -160,7 +237,7 @@ const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
                       ${
                         msg.sender === 'user'
                           ? 'bg-blue-600 text-white shadow-sm'
-                          : 'bg-white/80 border border-slate-200 text-slate-800 backdrop-blur-[2px]'
+                          : 'bg-white/80 border border-slate-200 text-slate-800'
                       }
                     `}
                   >
@@ -168,7 +245,7 @@ const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
                   </div>
 
                   {msg.sender === 'user' && (
-                    <div className="w-9 h-9 rounded-full bg-slate-200 flex items-center justify-center">
+                    <div className="w-12 h-12 rounded-full bg-slate-200 flex items-center justify-center">
                       <User size={16} className="text-slate-600" />
                     </div>
                   )}
@@ -176,8 +253,20 @@ const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
               ))}
 
               {loading && (
-                <div className="text-xs text-slate-400 pl-2 animate-pulse">
-                  PEPE está escribiendo...
+                <div className="flex items-end gap-3">
+                  <div className="w-9 h-9 flex items-center justify-center">
+                    <img
+                      src={pepeIcon}
+                      alt="pepe"
+                      className="w-16 h-16 object-contain"
+                    />
+                  </div>
+
+                  <div className="bg-white/80 border border-slate-200 rounded-2xl px-4 py-3 flex gap-1">
+                    <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+                    <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+                    <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce"></span>
+                  </div>
                 </div>
               )}
 
@@ -186,12 +275,11 @@ const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
           )}
         </div>
 
-        {/* INPUT (MISMO ESTILO) */}
         <div className="sticky bottom-0 px-6 pb-6">
           <div
             className="
               max-w-3xl mx-auto flex items-center gap-2
-              bg-white/80 backdrop-blur-md
+              bg-white/90
               border border-slate-200/60
               rounded-2xl px-3 py-2
               shadow-sm

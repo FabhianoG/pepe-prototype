@@ -8,6 +8,7 @@ type Props = {
   onNewChat: () => void
   onSelectChat: (chat: Chat) => void
   onDeleteActiveChat: () => void
+  activeChatId?: string | null
 }
 
 export default function ChatSidebar({
@@ -15,9 +16,9 @@ export default function ChatSidebar({
   onClose,
   onNewChat,
   onSelectChat,
-  onDeleteActiveChat
+  onDeleteActiveChat,
+  activeChatId,
 }: Props) {
-
   const [chats, setChats] = useState<Chat[]>(getChats())
 
   const refreshChats = () => {
@@ -27,7 +28,11 @@ export default function ChatSidebar({
   const handleDelete = (id: string) => {
     deleteChat(id)
     refreshChats()
-    onDeleteActiveChat()
+
+    // 🔥 SOLO SI ES EL CHAT ACTUAL
+    if (id === activeChatId) {
+      onDeleteActiveChat()
+    }
   }
 
   return (
@@ -54,9 +59,7 @@ export default function ChatSidebar({
           ${isOpen ? 'translate-x-0' : '-translate-x-full'}
         `}
       >
-
         <div className="space-y-1.5 text-sm mt-2">
-
           <button
             onClick={() => {
               onNewChat()
@@ -72,11 +75,9 @@ export default function ChatSidebar({
             <Search size={15} />
             <span className="text-sm">Buscar</span>
           </button>
-
         </div>
 
         <div className="mt-4 border-t border-gray-200 pt-3 flex-1 overflow-y-auto">
-
           <p className="text-[10px] sm:text-xs text-gray-400 font-semibold tracking-wide mb-2">
             CONVERSACIONES
           </p>
@@ -87,23 +88,40 @@ export default function ChatSidebar({
             </div>
           ) : (
             <div className="space-y-1">
-              {chats.map(chat => (
+              {chats.map((chat) => (
                 <div
                   key={chat.id}
-                  className="flex justify-between items-center px-2 py-2 rounded-lg hover:bg-gray-100 group"
+                  className={`
+                      flex justify-between items-center px-2 py-2 rounded-lg group cursor-pointer transition
+                      ${
+                        chat.id === activeChatId
+                          ? 'bg-blue-50 text-blue-700'
+                          : 'hover:bg-gray-100 text-gray-700'
+                      }
+                    `}
                 >
                   <span
                     onClick={() => {
                       onSelectChat(chat)
                       onClose()
                     }}
-                    className="text-sm truncate text-gray-700 cursor-pointer"
+                    className={`
+                      text-sm truncate cursor-pointer
+                      ${
+                        chat.id === activeChatId
+                          ? 'font-semibold text-blue-700'
+                          : 'text-gray-700'
+                      }
+                    `}
                   >
                     {chat.title}
                   </span>
 
                   <button
-                    onClick={() => handleDelete(chat.id)}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      handleDelete(chat.id)
+                    }}
                     className="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-500 transition"
                   >
                     <Trash2 size={14} />
@@ -112,7 +130,6 @@ export default function ChatSidebar({
               ))}
             </div>
           )}
-
         </div>
       </div>
     </>

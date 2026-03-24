@@ -5,6 +5,10 @@ import type { ChatInputRef } from './ChatInput'
 import { useState, useRef, useEffect } from 'react'
 import type { Chat } from '../../services/chat.service'
 
+// 🔥 IMPORTS NUEVOS (CLAVE)
+import { resetPepeState } from '../../services/pepe.service'
+import { resetTicketState } from '../../services/ticket.service'
+
 export default function ChatLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [isFullscreen, setIsFullscreen] = useState(false)
@@ -18,19 +22,33 @@ export default function ChatLayout() {
     chatRef.current?.generateTicket()
   }
 
+  // 🔥 FIX PRINCIPAL
   const handleNewChat = () => {
     chatRef.current?.newChat()
     setActiveChat(null)
+
+    // ✅ LIMPIA ESTADOS GLOBALES
+    resetPepeState()
+    resetTicketState()
   }
 
+  // 🔥 FIX TAMBIÉN AQUÍ
   const handleDeleteActiveChat = () => {
     chatRef.current?.newChat()
     setActiveChat(null)
+
+    // ✅ LIMPIA ESTADOS GLOBALES
+    resetPepeState()
+    resetTicketState()
+
     setRefreshKey((prev) => prev + 1)
   }
 
-  const handleChatCreated = () => {
+  const handleChatCreated = (chat: Chat) => {
     setRefreshKey((prev) => prev + 1)
+
+    // 🔥 AUTO-SELECCIONAR NUEVO CHAT
+    setActiveChat(chat)
   }
 
   const handleToggleFullscreen = () => {
@@ -72,8 +90,14 @@ export default function ChatLayout() {
           onSelectChat={(chat) => {
             setActiveChat(chat)
             setSidebarOpen(false)
+
+            // 🔥 BONUS (IMPORTANTE)
+            // Evita heredar estados al cambiar de chat
+            resetPepeState()
+            resetTicketState()
           }}
           onDeleteActiveChat={handleDeleteActiveChat}
+          activeChatId={activeChat?.id || null}
         />
 
         <div className="flex-1 flex flex-col">

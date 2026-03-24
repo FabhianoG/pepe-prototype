@@ -1,202 +1,130 @@
-import { normalizeText } from '../utils/textNormalizer'
-import { isSimilar } from '../utils/fuzzyMatch'
-
-type Intent = {
-  phrases: string[]
-  keywords: string[]
-  responses: string[]
-  priority?: number
-}
-
 type ConversationState = {
   serial?: string
-  step: 'init' | 'waiting_serial' | 'diagnosis'
+  ticket?: string
+  step: 'init' | 'waiting_serial' | 'diagnosis' | 'solution_provided'
 }
 
-// 🔥 ESTADO GLOBAL
 const state: ConversationState = {
   step: 'init',
 }
 
-// 🔥 RESET DEL BOT (IMPORTANTE)
+// 🔥 RESET
 export const resetPepeState = () => {
   state.serial = undefined
+  state.ticket = undefined
   state.step = 'init'
 }
 
-// 🔹 FORMATEAR PASOS
-const formatSteps = (steps: string[]): string => {
-  return (
-    'Sigue estos pasos:\n\n' +
-    steps.map((step, i) => `${i + 1}. ${step}`).join('\n')
-  )
-}
-
-// 🔹 INTENTS
-const intents: Intent[] = [
-  {
-    phrases: ['hola', 'buenas', 'ola'],
-    keywords: ['hola'],
-    responses: [
-      '¡Hola! 🤖 Te ayudaré con tu impresora HP.',
-    ],
-  },
-
-  {
-    phrases: ['no imprime a color', 'no sale color', 'blanco y negro'],
-    keywords: ['color', 'blanco', 'negro'],
-    responses: [
-      formatSteps([
-        'Verifica que los cartuchos de color tengan tinta',
-        'Asegúrate de que NO esté activada la opción "escala de grises"',
-        'Ve a propiedades de impresión y selecciona "color"',
-        'Realiza limpieza de cabezales desde HP Smart',
-        'Imprime una página de prueba en color',
-      ]),
-    ],
-    priority: 5,
-  },
-
-  {
-    phrases: ['no imprime', 'no imprime nada'],
-    keywords: ['imprime'],
-    responses: [
-      formatSteps([
-        'Verifica que la impresora esté encendida',
-        'Revisa que tenga papel',
-        'Confirma conexión (USB o WiFi)',
-        'Verifica que esté en línea',
-        'Reinicia la impresora y PC',
-      ]),
-    ],
-    priority: 2,
-  },
-
-  {
-    phrases: ['sin tinta', 'borroso'],
-    keywords: ['tinta', 'cartucho'],
-    responses: [
-      formatSteps([
-        'Revisa nivel de tinta',
-        'Reemplaza cartuchos',
-        'Limpia cabezales',
-        'Alinea cartuchos',
-      ]),
-    ],
-  },
-
-  {
-    phrases: ['wifi', 'no conecta'],
-    keywords: ['wifi', 'conexion'],
-    responses: [
-      formatSteps([
-        'Verifica misma red',
-        'Reinicia router',
-        'Reconecta impresora',
-        'Restablece red',
-      ]),
-    ],
-  },
-
-  {
-    phrases: ['error'],
-    keywords: ['error'],
-    responses: [
-      'Indícame el código de error exacto que aparece en tu impresora.',
-    ],
-  },
-]
-
-// 🔹 UTILS
-const tokenize = (text: string): string[] => text.split(' ')
-const getRandom = (arr: string[]) =>
-  arr[Math.floor(Math.random() * arr.length)]
-
-// 🔥 DETECCIÓN DE SERIAL
+// 🔍 DETECTAR SERIAL
 const detectSerial = (msg: string): string | null => {
-  const matchPhrase = msg.match(
-    /(numero de serie|serial|serie)\s*(?:es\s*)?([a-z0-9]+)/i,
-  )
-  if (matchPhrase) return matchPhrase[2]
-
-  const matchAlfanum = msg.match(/\b[a-z]*\d+[a-z\d]*\b/i)
-  if (matchAlfanum) return matchAlfanum[0]
-
-  const matchNumbers = msg.match(/\b\d{3,}\b/)
-  if (matchNumbers && msg.length <= 15) return matchNumbers[0]
-
-  return null
+  const match = msg.match(/[a-zA-Z0-9]{5,}/)
+  return match ? match[0] : null
 }
 
-// 🔥 FUNCIÓN PRINCIPAL (CON GUION)
+// 🎫 GENERAR TICKET
+const generateTicket = (): string => {
+  return 'HP-' + Math.floor(100000 + Math.random() * 900000)
+}
+
+// 🤖 FUNCIÓN PRINCIPAL
 export const getPepeResponse = (message: string): string => {
-  const msg = normalizeText(message)
+  const msg = message.toLowerCase()
 
-  // 🟢 STEP 1: INICIO
+  // 🟢 1. INICIO
   if (state.step === 'init') {
-    state.step = 'waiting_serial'
+    if (msg.includes('hola')) {
+      state.step = 'waiting_serial'
 
-    return '¡Hola! 🤖 Te ayudaré con tu impresora HP.\n\nPara comenzar, indícame el número de serie.'
-  }
+      return `👋 Hola, soy Pepe 🤖  
 
-  // 🟡 STEP 2: ESPERANDO SERIAL
-  if (state.step === 'waiting_serial') {
-    const detectedSerial = detectSerial(msg)
+Tu asistente virtual de soporte para impresoras HP.  
+Estoy aquí para ayudarte paso a paso a resolver cualquier problema con tu equipo de forma rápida y sencilla 👍  
 
-    if (!detectedSerial) {
-      return 'Por favor, indícame un número de serie válido (ej: CNF123ABC)'
+Para comenzar, necesito registrar tu impresora en el sistema 🔍  
+👉 ¿Podrías brindarme el número de serie?`
     }
 
-    state.serial = detectedSerial
+    return `👋 Para empezar, puedes escribirme "hola" y con gusto te ayudaré 😊`
+  }
+
+  // 🟡 2. ESPERANDO SERIAL
+  if (state.step === 'waiting_serial') {
+    const serial = detectSerial(message)
+
+    if (!serial) {
+      return `🔢 No logré identificar el número de serie  
+
+Por favor, envíamelo nuevamente (ejemplo: CNF123ABC) para poder continuar.`
+    }
+
+    state.serial = serial
     state.step = 'diagnosis'
 
-    return `Perfecto 👍 número de serie registrado: "${state.serial}".\n\nAhora dime cuál es el problema con tu impresora.`
+    return `✅ ¡Perfecto! Ya registré tu impresora correctamente  
+
+🔢 Número de serie: "${state.serial}"  
+
+Ahora cuéntame con confianza 👇  
+¿Qué problema estás presentando con tu impresora?`
   }
 
-  // 🔵 STEP 3: DIAGNÓSTICO
+  // 🔵 3. DIAGNÓSTICO
   if (state.step === 'diagnosis') {
-    const tokens = tokenize(msg)
+    if (msg.includes('color')) {
+      state.step = 'solution_provided'
 
-    let bestIntent: Intent | null = null
-    let bestScore = 0
+      return `🎨 Gracias por indicarme el problema  
 
-    for (const intent of intents) {
-      let score = 0
+Entiendo que tu impresora no está imprimiendo a color.  
+Este inconveniente suele ocurrir por algunas razones comunes como:  
 
-      for (const phrase of intent.phrases) {
-        if (msg.includes(phrase)) score += 4
-      }
+- Cartuchos de color sin tinta  
+- Configuración en blanco y negro activada  
+- Cabezales de impresión obstruidos  
 
-      for (const keyword of intent.keywords) {
-        if (msg.includes(keyword)) score += 2
-      }
+Vamos a solucionarlo paso a paso 👇  
 
-      for (const token of tokens) {
-        for (const keyword of intent.keywords) {
-          if (isSimilar(token, keyword)) score += 1
-        }
-      }
+1. Verifica que los cartuchos de color tengan suficiente tinta  
+2. Asegúrate de que NO esté activada la opción "escala de grises"  
+3. En propiedades de impresión, selecciona "color"  
+4. Realiza una limpieza de cabezales desde el software HP  
+5. Imprime una página de prueba en color  
 
-      if (intent.priority) score += intent.priority
-
-      if (score > bestScore) {
-        bestScore = score
-        bestIntent = intent
-      }
+Tómate un momento para realizar estos pasos 👀  
+Cuando termines, dime si el problema se solucionó 👍`
     }
 
-    if (bestIntent && bestScore > 0) {
-      let response = getRandom(bestIntent.responses)
+    return `🤔 No logré identificar el problema con claridad  
 
-      response += `\n\n📌 Impresora HP detectada`
-      response += `\n🔢 Serie: ${state.serial}`
-      response += `\n🧾 Se generará un ticket para su atención.`
-
-      return response
-    }
-
-    return 'No entendí bien 🤔. ¿Tu impresora no imprime, no imprime a color o muestra error?'
+¿Tu impresora no imprime a color? Puedes indicármelo para ayudarte mejor.`
   }
 
-  return 'Error en el sistema.'
+  // 🟣 4. DESPUÉS DE SOLUCIÓN
+  if (state.step === 'solution_provided') {
+    if (msg.includes('no') || msg.includes('sigue')) {
+      // 🎫 generar ticket aquí
+      state.ticket = generateTicket()
+
+      state.step = 'init'
+
+      return `📌 Gracias por intentarlo  
+
+Dado que el problema persiste, procederé a registrar tu caso para una atención más especializada 🔧  
+
+🔢 Serie: "${state.serial}"  
+🛠️ Problema: Impresión sin color  
+
+🎫 Ticket generado: "${state.ticket}"  
+
+Un especialista se comunicará contigo en breve para brindarte una solución más avanzada  
+
+Si necesitas ayuda con algo más, estaré aquí para apoyarte 😊`
+    }
+
+    return `🎉 ¡Excelente! Me alegra saber que tu impresora ya funciona correctamente  
+
+Si necesitas ayuda en el futuro, no dudes en volver a escribirme 🤖`
+  }
+
+  return `⚠️ Ocurrió un error en el sistema`
 }

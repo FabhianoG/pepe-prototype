@@ -12,7 +12,10 @@ export interface TicketItem {
   id: string
   problem: string
   printer: string
-  status: 'resuelto' | 'pendiente' | 'critico'
+  status: 'resuelto' | 'pendiente' | 'en_proceso' | 'en_pausa'
+  priority: 'baja' | 'media' | 'alta'
+  date: string
+  client: string
 }
 
 export interface ActivityItem {

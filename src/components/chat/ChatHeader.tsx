@@ -8,6 +8,7 @@ import {
   Headphones,
 } from 'lucide-react'
 import { resetPepeState } from '../../services/pepe.service'
+import { resetTicketState } from '../../services/ticket.service' // 🔥 NUEVO
 
 type ChatHeaderProps = {
   onReset: () => void
@@ -26,7 +27,6 @@ export default function ChatHeader({
   onToggleFullscreen,
   isFullscreen,
 }: ChatHeaderProps) {
-  // 🔹 BOTONES BASE (más pro)
   const btn =
     'p-2 rounded-xl bg-white/70 backdrop-blur-md border border-gray-200/60 hover:bg-white hover:shadow-md active:scale-95 transition-all duration-200'
 
@@ -44,12 +44,10 @@ export default function ChatHeader({
     >
       {/* 🔷 IZQUIERDA */}
       <div className="flex items-center gap-3 min-w-0">
-        {/* MENU */}
         <button onClick={onMenu} className={`${btn}`}>
           {isOpen ? <X size={18} /> : <Menu size={18} />}
         </button>
 
-        {/* TITULO */}
         <div className="leading-tight truncate">
           <h1 className="text-sm sm:text-base font-semibold text-gray-800 truncate">
             PEPE AI
@@ -59,7 +57,6 @@ export default function ChatHeader({
           </p>
         </div>
 
-        {/* ESTADO */}
         <span
           className="
             hidden md:flex items-center gap-2
@@ -76,8 +73,8 @@ export default function ChatHeader({
         </span>
       </div>
 
-      {/* 🔷 CENTRO (CTA IMPORTANTE) */}
-      <div className="flex-1 flex justify-center px-2 sm:px-4">
+      {/* 🔷 CENTRO */}
+      <div className="flex-1 flex justify-center px-2 sm:px-4 -translate-x-18">
         <button
           onClick={onGenerateTicket}
           className="
@@ -96,13 +93,12 @@ export default function ChatHeader({
           "
         >
           <Headphones size={16} className="opacity-70" />
-          <span className="hidden sm:inline">Soporte técnico</span>
+          <span className="hidden sm:inline">Técnico</span>
         </button>
       </div>
 
       {/* 🔷 DERECHA */}
       <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-        {/* FULLSCREEN */}
         <button
           onClick={onToggleFullscreen}
           className={`${btn} hidden md:flex`}
@@ -111,11 +107,12 @@ export default function ChatHeader({
           {isFullscreen ? <X size={16} /> : <Expand size={16} />}
         </button>
 
-        {/* RESET */}
+        {/* 🔥 RESET COMPLETO */}
         <button
           onClick={() => {
             onReset()
             resetPepeState()
+            resetTicketState() // 🔥 IMPORTANTE
           }}
           className={btn}
           title="Reiniciar chat"
@@ -123,7 +120,6 @@ export default function ChatHeader({
           <RotateCcw size={15} />
         </button>
 
-        {/* DOWNLOAD */}
         <button
           className={`${btn} hidden sm:flex`}
           title="Descargar conversación"
@@ -131,7 +127,6 @@ export default function ChatHeader({
           <Download size={16} />
         </button>
 
-        {/* PRINT */}
         <button className={`${btn} hidden sm:flex`} title="Imprimir">
           <Printer size={16} />
         </button>
