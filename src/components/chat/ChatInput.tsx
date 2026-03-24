@@ -39,6 +39,8 @@ const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
     const [showWelcome, setShowWelcome] = useState(messages.length === 0)
 
     const messagesEndRef = useRef<HTMLDivElement | null>(null)
+    const inputRef = useRef<HTMLInputElement | null>(null)
+
     const hasSaved = useRef<boolean>(!!activeChat)
     const chatIdRef = useRef<string | null>(activeChat?.id || null)
 
@@ -49,6 +51,34 @@ const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
     useEffect(() => {
       scrollToBottom()
     }, [messages, loading])
+
+    // 🔥 FIX REAL DEL FOCUS
+    useEffect(() => {
+      if (!showWelcome) {
+        inputRef.current?.focus()
+      }
+    }, [messages, showWelcome])
+
+    // 🔥 autofocus inicial
+    useEffect(() => {
+      inputRef.current?.focus()
+    }, [])
+
+    // 🔥 TAB → focus input
+    useEffect(() => {
+      const handleTabFocus = (e: KeyboardEvent) => {
+        if (e.key === 'Tab') {
+          e.preventDefault()
+          inputRef.current?.focus()
+        }
+      }
+
+      window.addEventListener('keydown', handleTabFocus)
+
+      return () => {
+        window.removeEventListener('keydown', handleTabFocus)
+      }
+    }, [])
 
     const handleNewChat = () => {
       setMessages([])
@@ -214,8 +244,19 @@ const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
               style={{ willChange: 'transform' }}
             >
               {messages.map((msg, i) => (
-                <div
+                <motion.div
                   key={i}
+                  initial={{
+                    opacity: 0,
+                    y: msg.sender === 'user' ? 10 : 20,
+                    scale: 0.98,
+                  }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{
+                    duration: 0.35,
+                    delay: i * 0.03,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
                   className={`flex items-end gap-3 ${
                     msg.sender === 'user' ? 'justify-end' : 'justify-start'
                   }`}
@@ -234,7 +275,7 @@ const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
                     className={`
                       px-4 py-2.5 rounded-2xl text-sm max-w-[70%]
                       leading-relaxed
-                      wrap-break-word whitespace-pre-wrap overflow-hidden
+                      break-words whitespace-pre-wrap overflow-hidden
                       ${
                         msg.sender === 'user'
                           ? 'bg-blue-600 text-white shadow-sm'
@@ -250,7 +291,7 @@ const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
                       <User size={16} className="text-slate-600" />
                     </div>
                   )}
-                </div>
+                </motion.div>
               ))}
 
               {loading && (
@@ -277,24 +318,12 @@ const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
         </div>
 
         <div className="sticky bottom-0 px-6 pb-6">
-          <div
-            className="
-              max-w-3xl mx-auto flex items-center gap-2
-              bg-white/90
-              border border-slate-200/60
-              rounded-2xl px-3 py-2
-              shadow-sm
-            "
-          >
+          <div className="max-w-3xl mx-auto flex items-center gap-2 bg-white/90 border border-slate-200/60 rounded-2xl px-3 py-2 shadow-sm">
             <input
+              ref={inputRef}
               type="text"
               placeholder="Escribe tu mensaje..."
-              className="
-                flex-1 px-3 py-2 text-sm
-                bg-transparent outline-none
-                text-slate-800
-                placeholder:text-slate-400
-              "
+              className="flex-1 px-3 py-2 text-sm bg-transparent outline-none text-slate-800 placeholder:text-slate-400"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSend()}
@@ -306,11 +335,7 @@ const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
 
             <button
               onClick={handleSend}
-              className="
-                bg-blue-600 hover:bg-blue-700
-                text-white p-2.5 rounded-xl
-                transition
-              "
+              className="bg-blue-600 hover:bg-blue-700 text-white p-2.5 rounded-xl transition"
             >
               <Send size={16} />
             </button>
