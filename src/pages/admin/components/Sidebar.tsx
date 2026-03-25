@@ -35,7 +35,7 @@ export default function Sidebar({
     <aside
       className={`
         fixed top-0 left-0 h-screen w-65
-        bg-linear-to-b from-[#93bdfc] via-[#60a8fa] to-[#8ba5fd]
+        bg-linear-to-b from-[#abcdff] via-[#7ab7fd] to-[#9eb5ff]
         text-black
         flex flex-col
         border-r border-black/5

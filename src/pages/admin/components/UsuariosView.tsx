@@ -1,4 +1,6 @@
 import { useState, useMemo } from 'react'
+import { motion } from 'framer-motion'
+import { Plus, Search, Power, Shield, Zap } from 'lucide-react'
 import { users as initialUsers } from '../../../services/user.service'
 import { getEmpresas } from '../../../services/empresa.service'
 import type { User } from '../../../types/user'
@@ -6,7 +8,6 @@ import type { User } from '../../../types/user'
 export default function UsuariosView() {
   const [usuarios, setUsuarios] = useState<User[]>(initialUsers)
   const [showModal, setShowModal] = useState(false)
-  const [success, setSuccess] = useState(false)
 
   const [search, setSearch] = useState('')
   const [roleFilter, setRoleFilter] = useState('ALL')
@@ -22,18 +23,14 @@ export default function UsuariosView() {
     role: 'USER' as 'ADMIN' | 'USER',
   })
 
-  // 🔍 FILTROS
   const filteredUsers = useMemo(() => {
     return usuarios.filter((u) => {
       const matchesSearch =
         u.name.toLowerCase().includes(search.toLowerCase()) ||
         u.email.toLowerCase().includes(search.toLowerCase())
 
-      const matchesRole =
-        roleFilter === 'ALL' || u.role === roleFilter
-
-      const matchesEstado =
-        estadoFilter === 'ALL' || u.estado === estadoFilter
+      const matchesRole = roleFilter === 'ALL' || u.role === roleFilter
+      const matchesEstado = estadoFilter === 'ALL' || u.estado === estadoFilter
 
       return matchesSearch && matchesRole && matchesEstado
     })
@@ -69,10 +66,6 @@ export default function UsuariosView() {
     setUsuarios([...usuarios, newUser])
     setShowModal(false)
 
-    // mensaje éxito
-    setSuccess(true)
-    setTimeout(() => setSuccess(false), 3000)
-
     setForm({
       name: '',
       lastName: '',
@@ -83,197 +76,177 @@ export default function UsuariosView() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="p-6 bg-gray-50 min-h-full">
 
-      {/* MENSAJE ÉXITO */}
-      {success && (
-        <div className="bg-green-100 text-green-700 px-4 py-2 rounded-md text-sm">
-          Usuario creado correctamente
+      {/* CONTENEDOR */}
+      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6">
+
+        {/* HEADER */}
+        <div className="flex justify-between items-center mb-6">
+          <div>
+            <h1 className="text-2xl font-semibold flex items-center gap-2 text-gray-900">
+              <Zap className="text-purple-600" size={20} />
+              User Control Panel
+            </h1>
+            <p className="text-gray-500 text-sm">
+              Gestión avanzada de usuarios
+            </p>
+          </div>
+
+          <button
+            onClick={() => setShowModal(true)}
+            className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm shadow"
+          >
+            <Plus size={16} />
+            Nuevo Usuario
+          </button>
         </div>
-      )}
 
-      {/* HEADER */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-semibold text-gray-900">
-            Usuarios
-          </h2>
-          <p className="text-sm text-gray-500">
-            Gestión de accesos y roles
-          </p>
+        {/* FILTROS */}
+        <div className="flex flex-wrap gap-3 mb-6">
+
+          <div className="flex items-center border border-gray-200 px-3 py-2 rounded-lg bg-white">
+            <Search size={16} className="text-gray-400" />
+            <input
+              placeholder="Buscar..."
+              className="outline-none ml-2 text-sm"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+
+          <select
+            value={roleFilter}
+            onChange={(e) => setRoleFilter(e.target.value)}
+            className="border border-gray-200 px-3 py-2 rounded-lg text-sm bg-white"
+          >
+            <option value="ALL">Roles</option>
+            <option value="ADMIN">Admin</option>
+            <option value="USER">User</option>
+          </select>
+
+          <select
+            value={estadoFilter}
+            onChange={(e) => setEstadoFilter(e.target.value)}
+            className="border border-gray-200 px-3 py-2 rounded-lg text-sm bg-white"
+          >
+            <option value="ALL">Estado</option>
+            <option value="ACTIVO">Activo</option>
+            <option value="INACTIVO">Inactivo</option>
+          </select>
+
         </div>
 
-        <button
-          onClick={() => setShowModal(true)}
-          className="bg-black text-white px-4 py-2 rounded-md text-sm"
-        >
-          Crear usuario
-        </button>
-      </div>
+        {/* GRID */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
 
-      {/* FILTROS */}
-      <div className="flex flex-wrap gap-3">
-        <input
-          placeholder="Buscar usuario..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="border px-3 py-2 rounded-md text-sm"
-        />
+          {filteredUsers.map((user) => (
+            <motion.div
+              key={user.id}
+              whileHover={{ y: -3 }}
+              className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition"
+            >
+              <div className="flex justify-between items-center mb-3">
 
-        <select
-          value={roleFilter}
-          onChange={(e) =>
-            setRoleFilter(e.target.value as 'ALL' | 'ADMIN' | 'USER')
-          }
-          className="border px-3 py-2 rounded-md text-sm"
-        >
-          <option value="ALL">Todos los roles</option>
-          <option value="ADMIN">ADMIN</option>
-          <option value="USER">USER</option>
-        </select>
+                <div>
+                  <h2 className="font-medium text-gray-900">
+                    {user.name} {user.lastName}
+                  </h2>
+                  <p className="text-xs text-gray-500">{user.email}</p>
+                </div>
 
-        <select
-          value={estadoFilter}
-          onChange={(e) =>
-            setEstadoFilter(e.target.value as 'ALL' | 'ACTIVO' | 'INACTIVO')
-          }
-          className="border px-3 py-2 rounded-md text-sm"
-        >
-          <option value="ALL">Todos los estados</option>
-          <option value="ACTIVO">ACTIVO</option>
-          <option value="INACTIVO">INACTIVO</option>
-        </select>
-      </div>
+                <Shield
+                  size={18}
+                  className={`${
+                    user.role === 'ADMIN'
+                      ? 'text-purple-600'
+                      : 'text-blue-600'
+                  }`}
+                />
+              </div>
 
-      {/* TABLA */}
-      <div className="bg-white border rounded-2xl shadow-sm overflow-hidden">
-        <table className="w-full text-sm">
+              <div className="flex justify-between text-xs mb-3 text-gray-500">
+                <span>Empresa:</span>
+                <span className="text-gray-800">{user.empresa || '-'}</span>
+              </div>
 
-          <thead className="bg-gray-50 text-xs uppercase text-gray-500">
-            <tr>
-              <th className="px-6 py-3 text-left">Usuario</th>
-              <th className="px-6 py-3 text-center">Empresa</th>
-              <th className="px-6 py-3 text-center">Rol</th>
-              <th className="px-6 py-3 text-center">Estado</th>
-              <th className="px-6 py-3 text-right">Acciones</th>
-            </tr>
-          </thead>
+              <div className="flex justify-between items-center">
 
-          <tbody className="divide-y">
-            {filteredUsers.map((user) => (
-              <tr key={user.id} className="hover:bg-gray-50">
+                <span
+                  className={`px-2 py-1 rounded-md text-xs font-medium ${
+                    user.estado === 'ACTIVO'
+                      ? 'bg-green-100 text-green-700'
+                      : 'bg-gray-100 text-gray-600'
+                  }`}
+                >
+                  {user.estado}
+                </span>
 
-                <td className="px-6 py-4">
-                  <div>
-                    <p className="font-medium text-gray-900">
-                      {user.name} {user.lastName ?? ''}
-                    </p>
-                    <p className="text-xs text-gray-500">
-                      {user.email}
-                    </p>
-                  </div>
-                </td>
+                <button
+                  onClick={() => toggleEstado(user.id)}
+                  className="flex items-center gap-1 text-xs border border-gray-300 px-2 py-1 rounded-md hover:bg-gray-100"
+                >
+                  <Power size={12} />
+                  Toggle
+                </button>
 
-                <td className="px-6 py-4 text-center">
-                  {user.empresa || '-'}
-                </td>
+              </div>
+            </motion.div>
+          ))}
 
-                <td className="px-6 py-4 text-center">
-                  <span className={`
-                    px-2 py-1 text-xs rounded-md
-                    ${
-                      user.role === 'ADMIN'
-                        ? 'bg-purple-100 text-purple-700'
-                        : 'bg-blue-100 text-blue-700'
-                    }
-                  `}>
-                    {user.role}
-                  </span>
-                </td>
-
-                <td className="px-6 py-4 text-center">
-                  <span className={`
-                    px-2 py-1 text-xs rounded-md
-                    ${
-                      user.estado === 'ACTIVO'
-                        ? 'bg-green-100 text-green-700'
-                        : 'bg-gray-200 text-gray-600'
-                    }
-                  `}>
-                    {user.estado}
-                  </span>
-                </td>
-
-                <td className="px-6 py-4 text-right">
-                  <button
-                    onClick={() => toggleEstado(user.id)}
-                    className="text-xs px-3 py-1 border rounded-md"
-                  >
-                    Estado
-                  </button>
-                </td>
-
-              </tr>
-            ))}
-          </tbody>
-
-        </table>
+        </div>
       </div>
 
       {/* MODAL */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
+        <div className="fixed inset-0 flex items-center justify-center bg-black/30 backdrop-blur-sm z-50">
 
-          <div
-            className="absolute inset-0 bg-black/30 backdrop-blur-sm"
-            onClick={() => setShowModal(false)}
-          />
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="bg-white border border-gray-200 p-6 rounded-xl w-full max-w-md shadow-lg"
+          >
+            <h2 className="text-lg font-semibold mb-4 text-gray-900">
+              Crear Usuario
+            </h2>
 
-          <div className="relative bg-white w-full max-w-md rounded-2xl p-6 shadow-xl">
-
-            <h3 className="text-lg font-semibold mb-4">
-              Crear usuario
-            </h3>
-
-            <div className="space-y-4">
+            <div className="space-y-3">
 
               <input
                 placeholder="Nombre"
+                className="w-full border border-gray-200 px-3 py-2 rounded-md"
                 value={form.name}
                 onChange={(e) =>
                   setForm({ ...form, name: e.target.value })
                 }
-                className="w-full border px-3 py-2 rounded-md text-sm"
               />
 
               <input
                 placeholder="Apellido"
+                className="w-full border border-gray-200 px-3 py-2 rounded-md"
                 value={form.lastName}
                 onChange={(e) =>
                   setForm({ ...form, lastName: e.target.value })
                 }
-                className="w-full border px-3 py-2 rounded-md text-sm"
               />
 
               <input
                 placeholder="Correo"
+                className="w-full border border-gray-200 px-3 py-2 rounded-md"
                 value={form.email}
                 onChange={(e) =>
                   setForm({ ...form, email: e.target.value })
                 }
-                className="w-full border px-3 py-2 rounded-md text-sm"
               />
 
-              {/* EMPRESA DINÁMICA */}
               <select
+                className="w-full border border-gray-200 px-3 py-2 rounded-md"
                 value={form.empresa}
                 onChange={(e) =>
                   setForm({ ...form, empresa: e.target.value })
                 }
-                className="w-full border px-3 py-2 rounded-md text-sm"
               >
-                <option value="">Seleccionar empresa</option>
-
+                <option value="">Empresa</option>
                 {empresas.map((emp) => (
                   <option key={emp.id} value={emp.nombre}>
                     {emp.nombre}
@@ -282,6 +255,7 @@ export default function UsuariosView() {
               </select>
 
               <select
+                className="w-full border border-gray-200 px-3 py-2 rounded-md"
                 value={form.role}
                 onChange={(e) =>
                   setForm({
@@ -289,34 +263,32 @@ export default function UsuariosView() {
                     role: e.target.value as 'ADMIN' | 'USER',
                   })
                 }
-                className="w-full border px-3 py-2 rounded-md text-sm"
               >
-                <option value="USER">Usuario</option>
-                <option value="ADMIN">Administrador</option>
+                <option value="USER">User</option>
+                <option value="ADMIN">Admin</option>
               </select>
 
             </div>
 
-            <div className="flex justify-end gap-2 mt-6">
+            <div className="flex justify-end gap-2 mt-5">
 
               <button
                 onClick={() => setShowModal(false)}
-                className="border px-4 py-2 rounded-md text-sm"
+                className="px-4 py-2 border border-gray-300 rounded-md text-sm"
               >
                 Cancelar
               </button>
 
               <button
                 onClick={handleCreateUser}
-                className="bg-black text-white px-4 py-2 rounded-md text-sm"
+                className="px-4 py-2 bg-purple-600 text-white rounded-md text-sm"
               >
                 Crear
               </button>
 
             </div>
 
-          </div>
-
+          </motion.div>
         </div>
       )}
 
