@@ -3,6 +3,7 @@ import {
   Building2,
   Ticket,
   Activity,
+  LayoutDashboard,
 } from 'lucide-react'
 
 import {
@@ -21,7 +22,6 @@ import {
 } from 'recharts'
 
 export default function DashboardView() {
-
   // 📊 DATA MOCK
   const estadoData = [
     { name: 'Abiertos', value: 10 },
@@ -47,20 +47,19 @@ export default function DashboardView() {
 
   return (
     <div className="p-6 bg-gray-50 min-h-full space-y-6">
-
       {/* HEADER */}
-      <div>
-        <h2 className="text-2xl font-semibold text-gray-900">
-          Dashboard
-        </h2>
-        <p className="text-sm text-gray-500">
+      <div className="flex flex-col">
+        <div className="flex items-center gap-2">
+          <LayoutDashboard className="text-purple-600" size={22} />
+          <h2 className="text-2xl font-semibold text-gray-900">Dashboard</h2>
+        </div>
+        <p className="text-sm text-gray-500 mt-1">
           Métricas del sistema de soporte
         </p>
       </div>
 
       {/* KPIs */}
       <div className="grid md:grid-cols-4 gap-4">
-
         <div className="bg-white border rounded-xl p-4 shadow-sm">
           <div className="flex justify-between">
             <p className="text-sm text-gray-500">Usuarios</p>
@@ -90,16 +89,12 @@ export default function DashboardView() {
             <p className="text-sm text-gray-500">Estado</p>
             <Activity className="text-green-600" size={18} />
           </div>
-          <p className="text-2xl font-semibold text-green-600 mt-2">
-            Activo
-          </p>
+          <p className="text-2xl font-semibold text-green-600 mt-2">Activo</p>
         </div>
-
       </div>
 
       {/* GRÁFICOS */}
       <div className="grid md:grid-cols-2 gap-6">
-
         {/* PIE CHART */}
         <div className="bg-white border rounded-xl p-5 shadow-sm">
           <h3 className="text-sm font-medium text-gray-700 mb-4">
@@ -108,12 +103,7 @@ export default function DashboardView() {
 
           <ResponsiveContainer width="100%" height={250}>
             <PieChart>
-              <Pie
-                data={estadoData}
-                dataKey="value"
-                outerRadius={80}
-                label
-              >
+              <Pie data={estadoData} dataKey="value" outerRadius={80} label>
                 {estadoData.map((_, index) => (
                   <Cell key={index} fill={COLORS[index]} />
                 ))}
@@ -139,7 +129,6 @@ export default function DashboardView() {
             </BarChart>
           </ResponsiveContainer>
         </div>
-
       </div>
 
       {/* LINE CHART */}
@@ -158,7 +147,6 @@ export default function DashboardView() {
           </LineChart>
         </ResponsiveContainer>
       </div>
-
     </div>
   )
 }

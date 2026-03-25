@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react'
 import { motion } from 'framer-motion'
-import { Plus, Search, Power, Shield, Zap } from 'lucide-react'
+import { Plus, Search, Power, Shield, Users } from 'lucide-react'
 import { users as initialUsers } from '../../../services/user.service'
 import { getEmpresas } from '../../../services/empresa.service'
 import type { User } from '../../../types/user'
@@ -85,7 +85,7 @@ export default function UsuariosView() {
         <div className="flex justify-between items-center mb-6">
           <div>
             <h1 className="text-2xl font-semibold flex items-center gap-2 text-gray-900">
-              <Zap className="text-purple-600" size={20} />
+              <Users className="text-purple-600" size={20} />
               User Control Panel
             </h1>
             <p className="text-gray-500 text-sm">
