@@ -8,10 +8,7 @@ import {
   Upload,
   Globe,
   Moon,
-  Database,
   Clock,
-  Plug,
-  FileText,
 } from 'lucide-react'
 
 export default function SettingsView() {
@@ -223,100 +220,7 @@ export default function SettingsView() {
               </button>
             </div>
           </div>
-
-          {/* TICKETS */}
-          <div className="border border-gray-200 rounded-xl p-5 bg-white">
-            <div className="flex items-center gap-2 mb-4">
-              <FileText className="text-blue-600" size={18} />
-              <h2 className="font-medium text-gray-900">Tickets</h2>
-            </div>
-
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600">
-                Auto-asignar tickets
-              </span>
-
-              <button
-                onClick={() => toggle('autoAsignacion')}
-                className={`w-10 h-5 flex items-center rounded-full p-1 ${
-                  settings.autoAsignacion ? 'bg-purple-600' : 'bg-gray-300'
-                }`}
-              >
-                <div
-                  className={`bg-white w-4 h-4 rounded-full shadow ${
-                    settings.autoAsignacion ? 'translate-x-5' : ''
-                  }`}
-                />
-              </button>
-            </div>
-          </div>
-
-          {/* INTEGRACIONES */}
-          <div className="border border-gray-200 rounded-xl p-5 bg-white">
-            <div className="flex items-center gap-2 mb-4">
-              <Plug className="text-indigo-600" size={18} />
-              <h2 className="font-medium text-gray-900">Integraciones</h2>
-            </div>
-
-            <button className="text-sm border px-3 py-2 rounded-md">
-              Conectar con API externa
-            </button>
-          </div>
-
-          {/* LOGS */}
-          <div className="border border-gray-200 rounded-xl p-5 bg-white">
-            <div className="flex items-center gap-2 mb-4">
-              <FileText className="text-gray-600" size={18} />
-              <h2 className="font-medium text-gray-900">Logs del sistema</h2>
-            </div>
-
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600">
-                Registrar actividad
-              </span>
-
-              <button
-                onClick={() => toggle('logs')}
-                className={`w-10 h-5 flex items-center rounded-full p-1 ${
-                  settings.logs ? 'bg-purple-600' : 'bg-gray-300'
-                }`}
-              >
-                <div
-                  className={`bg-white w-4 h-4 rounded-full shadow ${
-                    settings.logs ? 'translate-x-5' : ''
-                  }`}
-                />
-              </button>
-            </div>
-          </div>
-
-          {/* BACKUP */}
-          <div className="border border-gray-200 rounded-xl p-5 bg-white">
-            <div className="flex items-center gap-2 mb-4">
-              <Database className="text-red-600" size={18} />
-              <h2 className="font-medium text-gray-900">Backup</h2>
-            </div>
-
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600">
-                Backup automático
-              </span>
-
-              <button
-                onClick={() => toggle('backup')}
-                className={`w-10 h-5 flex items-center rounded-full p-1 ${
-                  settings.backup ? 'bg-purple-600' : 'bg-gray-300'
-                }`}
-              >
-                <div
-                  className={`bg-white w-4 h-4 rounded-full shadow ${
-                    settings.backup ? 'translate-x-5' : ''
-                  }`}
-                />
-              </button>
-            </div>
-          </div>
-
+          
         </div>
 
         {/* FOOTER */}
