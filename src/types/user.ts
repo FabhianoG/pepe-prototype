@@ -6,4 +6,5 @@ export type User = {
   password: string
   empresa?: string
   role: 'ADMIN' | 'USER'
+  estado: "ACTIVO" | "INACTIVO"
 }

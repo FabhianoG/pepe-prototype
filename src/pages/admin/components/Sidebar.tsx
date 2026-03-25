@@ -35,9 +35,10 @@ export default function Sidebar({
     <aside
       className={`
         fixed top-0 left-0 h-screen w-65
-        bg-[#0B1E2D] text-gray-300
+        bg-linear-to-b from-[#93bdfc] via-[#60a8fa] to-[#8ba5fd]
+        text-black
         flex flex-col
-        border-r border-white/5
+        border-r border-black/5
         z-50
         transition-transform duration-300
 
@@ -46,7 +47,7 @@ export default function Sidebar({
       `}
     >
       {/* HEADER */}
-      <div className="h-14 flex items-center px-4 text-white font-semibold border-b border-white/5">
+      <div className="h-14 flex items-center px-4 font-semibold border-b border-black/10">
         PEPE SYSTEM
       </div>
 
@@ -67,16 +68,16 @@ export default function Sidebar({
                 w-full flex items-center gap-3
                 px-3 py-2
                 rounded-md text-sm
-                transition
+                transition-all
 
                 ${
                   isActive
-                    ? 'bg-white/10 text-white'
-                    : 'text-gray-400 hover:bg-white/5 hover:text-white'
+                    ? 'bg-white/60 text-black shadow-sm'
+                    : 'text-black/70 hover:bg-white/40 hover:text-black'
                 }
               `}
             >
-              <Icon size={18} />
+              <Icon size={18} strokeWidth={1.8} />
               <span>{item.label}</span>
             </button>
           )
@@ -84,13 +85,21 @@ export default function Sidebar({
       </nav>
 
       {/* FOOTER */}
-      <div className="p-3 border-t border-white/5">
+      <div className="p-3 border-t border-black/10">
         <button
           onClick={() => {
             localStorage.removeItem('user')
             navigate('/')
           }}
-          className="w-full flex items-center gap-3 px-3 py-2 text-sm text-red-400 hover:bg-red-500/10 rounded-md transition"
+          className="
+            w-full flex items-center gap-3
+            px-3 py-2
+            text-sm
+            text-black-500
+            hover:bg-white/60
+            rounded-md
+            transition
+          "
         >
           <LogOut size={18} />
           Cerrar sesión

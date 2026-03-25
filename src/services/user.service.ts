@@ -1,4 +1,4 @@
-import type { User } from "../types/user";
+import type { User } from '../types/user'
 
 export const users: User[] = [
   {
@@ -21,10 +21,3 @@ export const users: User[] = [
     estado: 'ACTIVO',
   },
 ]
-
-export const login = (email: string, password: string): User | null => {
-  const user = users.find(
-    (u) => u.email === email && u.password === password
-  );
-  return user || null;
-};
