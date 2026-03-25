@@ -50,9 +50,7 @@ export default function Conocenos() {
               </h3>
 
               <p className="text-gray-600 mt-2 text-sm leading-relaxed">
-                Ser una plataforma líder en soluciones AI accesibles, escalables
-                y centradas en el usuario.
-              </p>
+                Ser una solución confiable para la gestión y resolución de incidencias mediante un agente integrado.              </p>
             </div>
           </div>
 
