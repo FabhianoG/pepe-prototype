@@ -35,6 +35,29 @@ export default function ChatSidebar({
     }
   }
 
+  const formatDateTime = (date?: string) => {
+    if (!date) return ''
+
+    const d = new Date(date)
+    const today = new Date()
+
+    const isToday =
+      d.getDate() === today.getDate() &&
+      d.getMonth() === today.getMonth() &&
+      d.getFullYear() === today.getFullYear()
+
+    const time = d.toLocaleTimeString([], {
+      hour: '2-digit',
+      minute: '2-digit',
+    })
+
+    if (isToday) return `Hoy, ${time}`
+
+    const fullDate = d.toLocaleDateString()
+
+    return `${fullDate}, ${time}`
+  }
+
   return (
     <>
       <div
@@ -100,22 +123,30 @@ export default function ChatSidebar({
                       }
                     `}
                 >
-                  <span
+                  <div
                     onClick={() => {
                       onSelectChat(chat)
                       onClose()
                     }}
-                    className={`
-                      text-sm truncate cursor-pointer
+                    className="flex flex-col flex-1 cursor-pointer"
+                  >
+                    <span
+                      className={`
+                      text-sm truncate
                       ${
                         chat.id === activeChatId
                           ? 'font-semibold text-blue-700'
                           : 'text-gray-700'
                       }
                     `}
-                  >
-                    {chat.title}
-                  </span>
+                    >
+                      {chat.title}
+                    </span>
+
+                    <span className="text-[10px] text-gray-400">
+                      {formatDateTime(chat.createdAt)}
+                    </span>
+                  </div>
 
                   <button
                     onClick={(e) => {

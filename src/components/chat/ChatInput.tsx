@@ -128,6 +128,7 @@ const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
             id: `chat-${Date.now()}`,
             title: 'Ticket de soporte',
             messages: updated,
+            createdAt: new Date().toISOString(),
           }
 
           const chats = JSON.parse(localStorage.getItem('pepe_chats') || '[]')
@@ -204,6 +205,7 @@ const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
             id: `chat-${Date.now()}`,
             title: userText.slice(0, 30),
             messages: updated,
+            createdAt: new Date().toISOString(),
           }
 
           const chats = JSON.parse(localStorage.getItem('pepe_chats') || '[]')

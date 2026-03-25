@@ -7,6 +7,7 @@ export type Chat = {
   id: string
   title: string
   messages: Message[]
+  createdAt: string
 }
 
 const KEY = 'pepe_chats'
@@ -32,6 +33,7 @@ export const saveNewChat = (messages: Message[]) => {
     id: `chat-${Date.now()}`,
     title: messages[0].text.slice(0, 30),
     messages,
+    createdAt: new Date().toISOString(), 
   }
 
   saveChats([newChat, ...chats])
