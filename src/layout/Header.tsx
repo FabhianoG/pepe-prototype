@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { ChevronDown, LogOut, User, Menu, X } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import icon from '../assets/icon1.webp'
+import logoEmpresa from '../assets/logo-mision-tecnologica-peru.webp'
 
 export default function Header() {
   const user = JSON.parse(localStorage.getItem('user') || 'null')
@@ -10,13 +10,8 @@ export default function Header() {
   const navigate = useNavigate()
 
   const handleLogout = () => {
-    // limpiar todo
     localStorage.removeItem('user')
-
-    // opcional: limpiar más cosas si tienes
     sessionStorage.clear()
-
-    // redirigir
     navigate('/', { replace: true })
   }
 
@@ -29,24 +24,28 @@ export default function Header() {
         bg-white/80 backdrop-blur-xl
         border border-white/40
         rounded-2xl shadow-md
-        px-4 sm:px-5 py-2
+        px-4 sm:px-6 py-2
         flex items-center justify-between
       "
       >
         {/* 🔷 IZQUIERDA */}
         <div
           onClick={() => navigate('/home')}
-          className="flex items-center gap-3 cursor-pointer group"
+          className="flex items-center gap-4 cursor-pointer group"
         >
-          <div className="w-9 h-9 flex items-center justify-center group-hover:scale-105 transition">
-            <img
-              src={icon}
-              alt="Pepe AI"
-              className="w-16 h-16 object-contain drop-shadow-sm"
-            />
-          </div>
-
-          <span className="font-semibold text-gray-800 text-base">PEPE AI</span>
+          {/* LOGO EMPRESA MEJORADO */}
+          <img
+            src={logoEmpresa}
+            alt="Misión Tecnológica"
+            className="
+              h-14 w-auto object-contain
+              drop-shadow-[0_2px_6px_rgba(0,0,0,0.15)]
+              transition-all duration-300
+            "
+            style={{
+              imageRendering: 'auto'
+            }}
+          />
         </div>
 
         {/* 🧭 NAV DESKTOP */}
@@ -70,13 +69,6 @@ export default function Header() {
             className="hover:text-[#5aa9e6] transition"
           >
             Preguntas
-          </button>
-
-          <button
-            onClick={() => navigate('/dashboard')}
-            className="hover:text-[#5aa9e6] transition font-medium"
-          >
-            Dashboard
           </button>
         </nav>
 
@@ -113,7 +105,7 @@ export default function Header() {
             />
           </button>
 
-          {/* 💎 DROPDOWN MEJORADO */}
+          {/* DROPDOWN */}
           <div
             className={`
               absolute right-0 mt-3 w-60
@@ -131,45 +123,30 @@ export default function Header() {
               }
             `}
           >
-            {/* HEADER USER */}
             <div className="px-4 py-3 border-b border-gray-100">
               <p className="font-semibold text-gray-800 truncate">
                 {user?.name || 'Usuario'}
               </p>
 
-              <p
-                className="text-xs text-gray-500 truncate mt-0.5"
-                title={user?.email}
-              >
+              <p className="text-xs text-gray-500 truncate mt-0.5">
                 {user?.email}
               </p>
             </div>
 
-            {/* OPCIONES */}
             <div className="py-1">
               <button
                 onClick={() => navigate('/profile')}
-                className="
-                  flex items-center gap-2 px-4 py-2.5 w-full
-                  text-sm text-gray-700
-                  hover:bg-gray-100/70
-                  transition
-                "
+                className="flex items-center gap-2 px-4 py-2.5 w-full text-sm text-gray-700 hover:bg-gray-100/70 transition"
               >
-                <User size={16} className="opacity-70" />
+                <User size={16} />
                 Mi perfil
               </button>
 
               <button
                 onClick={handleLogout}
-                className="
-                  flex items-center gap-2 px-4 py-2.5 w-full
-                  text-sm text-red-500
-                  hover:bg-red-50
-                  transition
-                "
+                className="flex items-center gap-2 px-4 py-2.5 w-full text-sm text-red-500 hover:bg-red-50 transition"
               >
-                <LogOut size={16} className="opacity-80" />
+                <LogOut size={16} />
                 Cerrar sesión
               </button>
             </div>
@@ -183,11 +160,8 @@ export default function Header() {
           <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[90%] max-w-sm bg-white rounded-xl shadow-lg p-4">
             <div className="flex flex-col gap-4 text-gray-700">
               <button onClick={() => navigate('/home')}>Agente Pepe</button>
-
               <button onClick={() => navigate('/conocenos')}>Conócenos</button>
-
               <button onClick={() => navigate('/faq')}>Preguntas</button>
-
               <button onClick={() => navigate('/dashboard')}>Dashboard</button>
 
               <hr />

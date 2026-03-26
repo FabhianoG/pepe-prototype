@@ -1,1 +1,21 @@
 @import "tailwindcss";
+
+
+/* 🔥 Scroll moderno */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.3); /* slate-500 suave */
+  border-radius: 999px;
+  transition: all 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.6); /* azul al hover */
+}

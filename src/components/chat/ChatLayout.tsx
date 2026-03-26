@@ -7,7 +7,6 @@ import type { Chat } from '../../services/chat.service'
 
 // 🔥 IMPORTS NUEVOS (CLAVE)
 import { resetPepeState } from '../../services/pepe.service'
-import { resetTicketState } from '../../services/ticket.service'
 
 export default function ChatLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -18,10 +17,6 @@ export default function ChatLayout() {
 
   const chatRef = useRef<ChatInputRef>(null)
 
-  const handleGenerateTicket = () => {
-    chatRef.current?.generateTicket()
-  }
-
   // 🔥 FIX PRINCIPAL
   const handleNewChat = () => {
     chatRef.current?.newChat()
@@ -29,7 +24,6 @@ export default function ChatLayout() {
 
     // ✅ LIMPIA ESTADOS GLOBALES
     resetPepeState()
-    resetTicketState()
   }
 
   // 🔥 FIX TAMBIÉN AQUÍ
@@ -39,7 +33,6 @@ export default function ChatLayout() {
 
     // ✅ LIMPIA ESTADOS GLOBALES
     resetPepeState()
-    resetTicketState()
 
     setRefreshKey((prev) => prev + 1)
   }
@@ -68,7 +61,7 @@ export default function ChatLayout() {
         ${
           isFullscreen
             ? 'fixed inset-0 z-9999 w-screen h-screen rounded-none'
-            : 'w-full h-full rounded-2xl'
+            : 'w-full h-full max-w-350 mx-auto rounded-2xl'
         }
       `}
     >
@@ -76,7 +69,6 @@ export default function ChatLayout() {
         onReset={handleNewChat}
         onMenu={() => setSidebarOpen(!sidebarOpen)}
         isOpen={sidebarOpen}
-        onGenerateTicket={handleGenerateTicket}
         onToggleFullscreen={handleToggleFullscreen}
         isFullscreen={isFullscreen}
       />
@@ -94,7 +86,6 @@ export default function ChatLayout() {
             // 🔥 BONUS (IMPORTANTE)
             // Evita heredar estados al cambiar de chat
             resetPepeState()
-            resetTicketState()
           }}
           onDeleteActiveChat={handleDeleteActiveChat}
           activeChatId={activeChat?.id || null}

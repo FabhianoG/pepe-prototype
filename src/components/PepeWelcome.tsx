@@ -19,8 +19,7 @@ export default function PepeWelcome() {
       <div>
         <h2 className="text-4xl font-bold text-[#0f172a]">¡Hola!</h2>
         <p className="text-[#334155] mt-2 text-sm leading-relaxed">
-          Soy Pepe, te ayudaré con cualquier problema de tu impresora.
-        </p>
+          Soy Pepe, tu agente inteligente de <strong>Misión Tecnológica</strong>. Estoy aquí para ayudarte con cualquier problema de tus equipos.        </p>
       </div>
 
       {/* 🧑 Avatar */}

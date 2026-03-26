@@ -1,130 +1,242 @@
+type ConversationStep =
+  | 'init'
+  | 'confirming'
+  | 'diagnosis'
+  | 'awaiting_response'
+  | 'derivation'
+
 type ConversationState = {
-  serial?: string
-  ticket?: string
-  step: 'init' | 'waiting_serial' | 'diagnosis' | 'solution_provided'
+  step: ConversationStep
+  attempts: number
+  reference?: string
 }
 
 const state: ConversationState = {
   step: 'init',
+  attempts: 0,
 }
 
-// 🔥 RESET
+// 🧠 SIMULACIÓN DE MONITOREO
+const monitoredDevice = {
+  name: 'LaserJet Pro M404',
+  issue: 'no imprime', // 'atasco' | 'no imprime' | 'error'
+}
+
+// 🔄 RESET
 export const resetPepeState = () => {
-  state.serial = undefined
-  state.ticket = undefined
   state.step = 'init'
+  state.attempts = 0
+  state.reference = undefined
 }
 
-// 🔍 DETECTAR SERIAL
-const detectSerial = (msg: string): string | null => {
-  const match = msg.match(/[a-zA-Z0-9]{5,}/)
-  return match ? match[0] : null
+// 🔎 GENERAR CÓDIGO
+const generateReference = (): string => {
+  return 'MT-' + Math.floor(100000 + Math.random() * 900000)
 }
 
-// 🎫 GENERAR TICKET
-const generateTicket = (): string => {
-  return 'HP-' + Math.floor(100000 + Math.random() * 900000)
+// 🔍 HELPERS MEJORADOS
+const isNegative = (msg: string) =>
+  msg.includes('no funciona') ||
+  msg.includes('sigue igual') ||
+  msg.includes('no se solucionó') ||
+  msg.includes('continúa igual')
+
+const isPositive = (msg: string) =>
+  msg.includes('sí') ||
+  msg.includes('si') ||
+  msg.includes('ya funciona') ||
+  msg.includes('listo') ||
+  msg.includes('solucionado')
+
+// 🧠 DETECCIÓN DE PROBLEMA
+const detectIssue = (msg: string) => {
+  if (msg.includes('no imprime')) return 'no imprime'
+  if (msg.includes('atasco') || msg.includes('papel')) return 'atasco'
+  if (msg.includes('error') || msg.includes('falla')) return 'error'
+  return null
 }
 
-// 🤖 FUNCIÓN PRINCIPAL
+// 🧠 FUNCIÓN PRINCIPAL
 export const getPepeResponse = (message: string): string => {
   const msg = message.toLowerCase()
+  const detectedIssue = detectIssue(msg)
 
-  // 🟢 1. INICIO
+  // 🟢 INIT
   if (state.step === 'init') {
-    if (msg.includes('hola')) {
-      state.step = 'waiting_serial'
-
-      return `👋 Hola, soy Pepe 🤖  
-
-Tu asistente virtual de soporte para impresoras HP.  
-Estoy aquí para ayudarte paso a paso a resolver cualquier problema con tu equipo de forma rápida y sencilla 👍  
-
-Para comenzar, necesito registrar tu impresora en el sistema 🔍  
-👉 ¿Podrías brindarme el número de serie?`
-    }
-
-    return `👋 Para empezar, puedes escribirme "hola" y con gusto te ayudaré 😊`
-  }
-
-  // 🟡 2. ESPERANDO SERIAL
-  if (state.step === 'waiting_serial') {
-    const serial = detectSerial(message)
-
-    if (!serial) {
-      return `🔢 No logré identificar el número de serie  
-
-Por favor, envíamelo nuevamente (ejemplo: CNF123ABC) para poder continuar.`
-    }
-
-    state.serial = serial
     state.step = 'diagnosis'
 
-    return `✅ ¡Perfecto! Ya registré tu impresora correctamente  
+    // 🔥 Usuario inicia con problema
+    if (detectedIssue) {
+      state.step = 'confirming'
 
-🔢 Número de serie: "${state.serial}"  
+      if (detectedIssue === 'no imprime') {
+        return `🧠 Entiendo lo que ocurre  
 
-Ahora cuéntame con confianza 👇  
-¿Qué problema estás presentando con tu impresora?`
+Detecté que tu impresora ${monitoredDevice.name} presenta problemas de impresión  
+
+📡 Según el monitoreo, el equipo no está respondiendo correctamente  
+
+👉 Antes de continuar, confirmemos:  
+¿No imprime ningún documento o imprime con errores?`
+      }
+
+      if (detectedIssue === 'atasco') {
+        return `📄 Detecté un posible atasco en tu impresora ${monitoredDevice.name}  
+
+📡 El sistema indica una obstrucción en el flujo de papel  
+
+👉 ¿La impresora muestra papel atascado o un error en pantalla?`
+      }
+
+      return `⚠️ Detecté un comportamiento inusual en tu impresora ${monitoredDevice.name}  
+
+👉 ¿Podrías indicarme qué mensaje aparece o qué comportamiento observas?`
+    }
+
+    // saludo normal
+    return `👋 Hola, soy Pepe 🤖  
+
+Soporte de equipos de Misión Tecnológica  
+
+🧠 Ya tengo acceso a tus equipos asignados  
+
+🖨️ Detecté actividad irregular en tu impresora ${monitoredDevice.name}  
+
+👉 ¿Qué problema estás experimentando?`
   }
 
-  // 🔵 3. DIAGNÓSTICO
+  // 🟡 CONFIRMING (🔥 CLAVE)
+  if (state.step === 'confirming') {
+    if (msg.includes('no imprime')) {
+      state.step = 'awaiting_response'
+
+      return `🖨️ Perfecto, gracias por confirmar  
+
+Vamos a validar el estado de tu impresora ${monitoredDevice.name}:
+
+1. Verifica que esté encendida  
+2. Revisa si aparece como "offline"  
+3. Confirma papel y tóner  
+4. Intenta imprimir una página de prueba  
+
+👉 Dime cómo te va`
+    }
+
+    if (msg.includes('error') || msg.includes('falla')) {
+      state.step = 'awaiting_response'
+
+      return `⚠️ Entiendo  
+
+Vamos a revisar el error en ${monitoredDevice.name}:
+
+1. Reinicia la impresora  
+2. Verifica conexiones  
+3. Observa si aparece algún código  
+
+👉 Cuéntame qué ocurre`
+    }
+
+    return `🤔 Solo para confirmar  
+
+¿El problema es que no imprime, hay un atasco o aparece algún error?`
+  }
+
+  // 🔵 DIAGNÓSTICO
   if (state.step === 'diagnosis') {
-    if (msg.includes('color')) {
-      state.step = 'solution_provided'
+    state.attempts++
 
-      return `🎨 Gracias por indicarme el problema  
+    if (detectedIssue === 'no imprime' || monitoredDevice.issue === 'no imprime') {
+      state.step = 'awaiting_response'
 
-Entiendo que tu impresora no está imprimiendo a color.  
-Este inconveniente suele ocurrir por algunas razones comunes como:  
+      return `🖨️ Vamos a revisar tu impresora ${monitoredDevice.name}  
 
-- Cartuchos de color sin tinta  
-- Configuración en blanco y negro activada  
-- Cabezales de impresión obstruidos  
+1. Verifica encendido  
+2. Revisa conexión  
+3. Confirma papel y tóner  
 
-Vamos a solucionarlo paso a paso 👇  
-
-1. Verifica que los cartuchos de color tengan suficiente tinta  
-2. Asegúrate de que NO esté activada la opción "escala de grises"  
-3. En propiedades de impresión, selecciona "color"  
-4. Realiza una limpieza de cabezales desde el software HP  
-5. Imprime una página de prueba en color  
-
-Tómate un momento para realizar estos pasos 👀  
-Cuando termines, dime si el problema se solucionó 👍`
+👉 Dime si se solucionó`
     }
 
-    return `🤔 No logré identificar el problema con claridad  
+    if (detectedIssue === 'atasco' || monitoredDevice.issue === 'atasco') {
+      state.step = 'awaiting_response'
 
-¿Tu impresora no imprime a color? Puedes indicármelo para ayudarte mejor.`
+      return `📄 Vamos a resolver el atasco en ${monitoredDevice.name}  
+
+1. Apaga la impresora  
+2. Retira el papel  
+3. Enciende nuevamente  
+
+👉 Dime si se solucionó`
+    }
+
+    if (state.attempts === 1) {
+      return `🤔 ¿El problema es impresión, atasco o error?`
+    }
+
+    if (state.attempts >= 2) {
+      state.step = 'derivation'
+      state.reference = generateReference()
+
+      return `🧠 Gracias por la información  
+
+Voy a derivar tu caso a un especialista 🔧  
+
+📌 He registrado tu solicitud  
+
+🔎 Código: ${state.reference}  
+
+👨‍🔧 Un técnico te contactará  
+
+👉 Continúa la conversación`
+    }
   }
 
-  // 🟣 4. DESPUÉS DE SOLUCIÓN
-  if (state.step === 'solution_provided') {
-    if (msg.includes('no') || msg.includes('sigue')) {
-      // 🎫 generar ticket aquí
-      state.ticket = generateTicket()
+  // 🟣 RESPUESTA A SOLUCIÓN
+  if (state.step === 'awaiting_response') {
+    if (isNegative(msg)) {
+      state.step = 'derivation'
+      state.reference = generateReference()
 
+      return `🧠 Gracias por intentarlo  
+
+El equipo ${monitoredDevice.name} requiere revisión especializada  
+
+👉 Voy a escalar tu caso 🔧  
+
+📌 Solicitud registrada  
+
+🔎 Código: ${state.reference}  
+
+👨‍🔧 Te contactarán pronto  
+
+👉 Continúa la conversación`
+    }
+
+    if (isPositive(msg)) {
       state.step = 'init'
+      state.attempts = 0
+      state.reference = undefined
 
-      return `📌 Gracias por intentarlo  
+      return `🎉 Excelente  
 
-Dado que el problema persiste, procederé a registrar tu caso para una atención más especializada 🔧  
+La impresora ${monitoredDevice.name} ya está funcionando  
 
-🔢 Serie: "${state.serial}"  
-🛠️ Problema: Impresión sin color  
-
-🎫 Ticket generado: "${state.ticket}"  
-
-Un especialista se comunicará contigo en breve para brindarte una solución más avanzada  
-
-Si necesitas ayuda con algo más, estaré aquí para apoyarte 😊`
+Si necesitas ayuda, aquí estaré 🤖`
     }
 
-    return `🎉 ¡Excelente! Me alegra saber que tu impresora ya funciona correctamente  
-
-Si necesitas ayuda en el futuro, no dudes en volver a escribirme 🤖`
+    return `🤔 ¿Se solucionó el problema o continúa?`
   }
 
-  return `⚠️ Ocurrió un error en el sistema`
+  // 🔴 DERIVACIÓN
+  if (state.step === 'derivation') {
+    return `👨‍🔧 Tu caso está siendo atendido  
+
+🔎 Código: ${state.reference}  
+
+📞 Pronto recibirás soporte  
+
+👉 Continúa la conversación`
+  }
+
+  return `⚠️ Ocurrió un error`
 }

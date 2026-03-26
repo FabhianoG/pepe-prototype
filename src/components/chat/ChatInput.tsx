@@ -8,7 +8,6 @@ import {
 } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { getPepeResponse } from '../../services/pepe.service'
-import { handleTicketFlow, isTicketActive } from '../../services/ticket.service'
 import { updateChat, type Chat } from '../../services/chat.service'
 import ChatWelcome from './ChatWelcome'
 import pepeIcon from '../../assets/icon.webp'
@@ -24,23 +23,24 @@ type ChatInputProps = {
 }
 
 export type ChatInputRef = {
-  generateTicket: () => void
   newChat: () => void
 }
 
 const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
   ({ activeChat, onChatCreated }, ref) => {
+    const initialMessages = activeChat?.messages || []
+
     const [message, setMessage] = useState('')
     const [loading, setLoading] = useState(false)
-    const [messages, setMessages] = useState<Message[]>(
-      activeChat?.messages || [],
-    )
+    const [messages, setMessages] = useState<Message[]>(initialMessages)
 
-    const [showWelcome, setShowWelcome] = useState(messages.length === 0)
+    const showWelcome = messages.length === 0
 
     const messagesEndRef = useRef<HTMLDivElement | null>(null)
+    const lastUserRef = useRef<HTMLDivElement | null>(null) // 🔥 NUEVO
     const inputRef = useRef<HTMLInputElement | null>(null)
-    const shouldScrollRef = useRef(false) // 🔥 NUEVO (clave)
+
+    const shouldScrollRef = useRef<'bottom' | 'user' | null>(null)
 
     const hasSaved = useRef<boolean>(!!activeChat)
     const chatIdRef = useRef<string | null>(activeChat?.id || null)
@@ -49,27 +49,49 @@ const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
     }
 
-    // 🔥 SCROLL SOLO CUANDO DEBE
-    useEffect(() => {
-      if (shouldScrollRef.current) {
-        scrollToBottom()
-        shouldScrollRef.current = false
+    const scrollToUser = () => {
+      if (!lastUserRef.current) return
+
+      const container = lastUserRef.current.parentElement?.parentElement
+      const rect = lastUserRef.current.getBoundingClientRect()
+
+      // 🔥 si está muy arriba o fuera → centrar
+      if (rect.top < 100 || rect.bottom > window.innerHeight - 100) {
+        lastUserRef.current.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+        })
+      } else {
+        // 🔥 si ya está visible → baja un poco
+        container?.scrollBy({
+          top: 120,
+          behavior: 'smooth',
+        })
       }
+    }
+
+    useEffect(() => {
+      if (shouldScrollRef.current === 'bottom') {
+        scrollToBottom()
+      }
+
+      if (shouldScrollRef.current === 'user') {
+        scrollToUser()
+      }
+
+      shouldScrollRef.current = null
     }, [messages, loading])
 
-    // 🔥 FIX FOCUS
+    useEffect(() => {
+      inputRef.current?.focus()
+    }, [])
+
     useEffect(() => {
       if (!showWelcome) {
         inputRef.current?.focus()
       }
     }, [messages, showWelcome])
 
-    // 🔥 autofocus inicial
-    useEffect(() => {
-      inputRef.current?.focus()
-    }, [])
-
-    // 🔥 TAB → focus input
     useEffect(() => {
       const handleTabFocus = (e: KeyboardEvent) => {
         if (e.key === 'Tab') {
@@ -79,7 +101,6 @@ const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
       }
 
       window.addEventListener('keydown', handleTabFocus)
-
       return () => {
         window.removeEventListener('keydown', handleTabFocus)
       }
@@ -91,77 +112,14 @@ const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
       setLoading(false)
       hasSaved.current = false
       chatIdRef.current = null
-      setShowWelcome(true)
-    }
-
-    const generateTicket = () => {
-      if (messages.length === 0) {
-        setShowWelcome(false)
-      }
-
-      const userText = 'ticket'
-
-      const newMessages: Message[] = [
-        ...messages,
-        { text: 'Quiero generar un ticket de soporte', sender: 'user' },
-      ]
-
-      shouldScrollRef.current = true // 🔥
-      setMessages(newMessages)
-      setLoading(true)
-
-      setTimeout(() => {
-        const botText = handleTicketFlow(userText) || ''
-
-        const updated: Message[] = [
-          ...newMessages,
-          { text: botText, sender: 'bot' },
-        ]
-
-        shouldScrollRef.current = true // 🔥
-        setMessages(updated)
-
-        let newChat: Chat | null = null
-
-        if (!hasSaved.current) {
-          newChat = {
-            id: `chat-${Date.now()}`,
-            title: 'Ticket de soporte',
-            messages: updated,
-            createdAt: new Date().toISOString(),
-          }
-
-          const chats = JSON.parse(localStorage.getItem('pepe_chats') || '[]')
-          localStorage.setItem(
-            'pepe_chats',
-            JSON.stringify([newChat, ...chats]),
-          )
-
-          chatIdRef.current = newChat.id
-          hasSaved.current = true
-        } else if (chatIdRef.current) {
-          updateChat(chatIdRef.current, updated)
-        }
-
-        if (newChat) {
-          onChatCreated?.(newChat)
-        }
-
-        setLoading(false)
-      }, 500)
     }
 
     useImperativeHandle(ref, () => ({
-      generateTicket,
       newChat: handleNewChat,
     }))
 
     const handleSend = () => {
       if (!message.trim()) return
-
-      if (messages.length === 0) {
-        setShowWelcome(false)
-      }
 
       const userText = message
 
@@ -170,33 +128,25 @@ const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
         { text: userText, sender: 'user' },
       ]
 
-      shouldScrollRef.current = true // 🔥
       setMessages(newMessages)
       setMessage('')
       setLoading(true)
 
+      // 🔥 cuando envías → scroll normal
+      shouldScrollRef.current = 'bottom'
+
       setTimeout(() => {
-        let botText = ''
-
-        if (isTicketActive()) {
-          botText = handleTicketFlow(userText) || ''
-        } else {
-          const ticketResponse = handleTicketFlow(userText)
-
-          if (ticketResponse) {
-            botText = ticketResponse
-          } else {
-            botText = getPepeResponse(userText)
-          }
-        }
+        const botText = getPepeResponse(userText)
 
         const updated: Message[] = [
           ...newMessages,
           { text: botText, sender: 'bot' },
         ]
 
-        shouldScrollRef.current = true // 🔥
         setMessages(updated)
+
+        // 🔥 cuando responde el bot → scroll al user
+        shouldScrollRef.current = 'user'
 
         let newChat: Chat | null = null
 
@@ -225,24 +175,24 @@ const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
         }
 
         setLoading(false)
-      }, 700)
+      }, 1200)
     }
 
     return (
       <div className="flex flex-col h-full bg-transparent">
+        {/* 🔹 MENSAJES */}
         <div
           className={`
             flex-1 overflow-y-auto overflow-x-hidden px-6
-            ${showWelcome ? 'flex items-center justify-center' : 'pt-6 pb-32'}
+            ${showWelcome ? 'flex items-center justify-center' : 'pt-12 pb-32'}
           `}
         >
           <AnimatePresence>
             {showWelcome && (
               <motion.div
-                initial={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.96 }}
-                transition={{ duration: 0.3, ease: 'easeOut' }}
-                style={{ willChange: 'transform, opacity' }}
+                initial={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
               >
                 <ChatWelcome />
               </motion.div>
@@ -251,59 +201,69 @@ const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
 
           {!showWelcome && (
             <div className="max-w-3xl mx-auto space-y-6">
-              {messages.map((msg, i) => (
-                <motion.div
-                  key={i}
-                  initial={{
-                    opacity: 0,
-                    y: msg.sender === 'user' ? 10 : 20,
-                    scale: 0.98,
-                  }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  transition={{
-                    duration: 0.35,
-                    delay: i * 0.03,
-                    ease: [0.22, 1, 0.36, 1],
-                  }}
-                  className={`flex items-end gap-3 ${
-                    msg.sender === 'user' ? 'justify-end' : 'justify-start'
-                  }`}
-                >
-                  {msg.sender === 'bot' && (
-                    <div className="w-12 h-12 flex items-center justify-center">
-                      <img src={pepeIcon} className="w-20 h-20 object-contain" />
-                    </div>
-                  )}
+              {messages.map((msg, i) => {
+                const isLastUser =
+                  msg.sender === 'user' &&
+                  i === messages.map((m) => m.sender).lastIndexOf('user')
 
-                  <div
-                    className={`
-                      px-4 py-2.5 rounded-2xl text-sm max-w-[70%]
-                      leading-relaxed wrap-break-word whitespace-pre-wrap overflow-hidden
-                      ${
-                        msg.sender === 'user'
-                          ? 'bg-blue-600 text-white shadow-sm'
-                          : 'bg-white/80 border border-slate-200 text-slate-800'
-                      }
-                    `}
+                return (
+                  <motion.div
+                    key={i}
+                    ref={isLastUser ? lastUserRef : null} // 🔥 AQUÍ
+                    initial={{
+                      opacity: 0,
+                      y: msg.sender === 'user' ? 10 : 20,
+                      scale: 0.98,
+                    }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{
+                      duration: 0.35,
+                      delay: i * 0.03,
+                      ease: [0.22, 1, 0.36, 1],
+                    }}
+                    className={`flex items-end gap-3 ${
+                      msg.sender === 'user' ? 'justify-end' : 'justify-start'
+                    }`}
                   >
-                    {msg.text}
-                  </div>
+                    {msg.sender === 'bot' && (
+                      <div className="w-12 h-12 flex items-center justify-center">
+                        <img
+                          src={pepeIcon}
+                          className="w-20 h-20 object-contain"
+                        />
+                      </div>
+                    )}
 
-                  {msg.sender === 'user' && (
-                    <div className="w-12 h-12 rounded-full bg-slate-200 flex items-center justify-center">
-                      <User size={16} className="text-slate-600" />
+                    <div
+                      className={`
+                        px-4 py-2.5 rounded-2xl text-sm max-w-[70%]
+                        leading-relaxed whitespace-pre-wrap wrap-break-word
+                        ${
+                          msg.sender === 'user'
+                            ? 'bg-blue-600 text-white shadow-sm'
+                            : 'bg-white/80 border border-slate-200 text-slate-800'
+                        }
+                      `}
+                    >
+                      {msg.text}
                     </div>
-                  )}
-                </motion.div>
-              ))}
+
+                    {msg.sender === 'user' && (
+                      <div className="w-12 h-12 rounded-full bg-slate-200 flex items-center justify-center">
+                        <User size={16} className="text-slate-600" />
+                      </div>
+                    )}
+                  </motion.div>
+                )
+              })}
 
               {loading && (
                 <div className="flex items-end gap-3">
                   <img src={pepeIcon} className="w-16 h-16 object-contain" />
-                  <div className="bg-white/80 border border-slate-200 rounded-2xl px-4 py-3 flex gap-1">
-                    <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce"></span>
-                    <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce"></span>
-                    <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce"></span>
+                  <div className="bg-white/80 border border-slate-200 rounded-2xl px-4 py-3 flex items-center gap-1">
+                    <span className="w-2 h-2 bg-slate-400 rounded-full animate-[bounce_1.2s_infinite]"></span>
+                    <span className="w-2 h-2 bg-slate-400 rounded-full animate-[bounce_1.2s_infinite] [animation-delay:0.2s]"></span>
+                    <span className="w-2 h-2 bg-slate-400 rounded-full animate-[bounce_1.2s_infinite] [animation-delay:0.4s]"></span>
                   </div>
                 </div>
               )}
@@ -313,6 +273,7 @@ const ChatInput = forwardRef<ChatInputRef, ChatInputProps>(
           )}
         </div>
 
+        {/* 🔹 INPUT */}
         <div className="sticky bottom-0 px-6 pb-6">
           <div className="max-w-3xl mx-auto flex items-center gap-2 bg-white/90 border border-slate-200/60 rounded-2xl px-3 py-2 shadow-sm">
             <input

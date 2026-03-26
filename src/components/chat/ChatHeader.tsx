@@ -5,16 +5,13 @@ import {
   RotateCcw,
   Menu,
   X,
-  Headphones,
 } from 'lucide-react'
 import { resetPepeState } from '../../services/pepe.service'
-import { resetTicketState } from '../../services/ticket.service'
 
 type ChatHeaderProps = {
   onReset: () => void
   onMenu: () => void
   isOpen: boolean
-  onGenerateTicket: () => void
   onToggleFullscreen: () => void
   isFullscreen: boolean
 }
@@ -23,7 +20,6 @@ export default function ChatHeader({
   onReset,
   onMenu,
   isOpen,
-  onGenerateTicket,
   onToggleFullscreen,
   isFullscreen,
 }: ChatHeaderProps) {
@@ -75,26 +71,7 @@ export default function ChatHeader({
 
       {/* 🔷 CENTRO */}
       <div className="flex-1 flex justify-center px-2 sm:px-4 -translate-x-18">
-        <button
-          onClick={onGenerateTicket}
-          className="
-            flex items-center gap-2
-            px-4 py-2
-            rounded-xl
-            bg-white
-            border border-gray-200
-            text-gray-700
-            hover:bg-gray-50
-            hover:border-gray-300
-            transition
-            shadow-sm
-            text-sm font-medium
-            whitespace-nowrap
-          "
-        >
-          <Headphones size={16} className="opacity-70" />
-          <span className="hidden sm:inline">Técnico</span>
-        </button>
+
       </div>
 
       {/* 🔷 DERECHA */}
@@ -112,7 +89,6 @@ export default function ChatHeader({
           onClick={() => {
             onReset()
             resetPepeState()
-            resetTicketState() // 🔥 IMPORTANTE
           }}
           className={btn}
           title="Reiniciar chat"

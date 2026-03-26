@@ -1,12 +1,13 @@
 export default function PepeInfoCard() {
   return (
     <div className="w-full max-w-2xl mx-auto">
-      
-      {/* 🧠 Título + descripción centrados */}
+
+      {/* 🧠 Título + contexto */}
       <div className="text-center">
         <h3 className="text-2xl font-semibold text-[#0f172a]">
           ¿Cómo aprovechar mejor a Pepe?
         </h3>
+
       </div>
 
       {/* 🔥 INFOGRAFÍA */}
@@ -30,10 +31,13 @@ export default function PepeInfoCard() {
 
               <ul className="mt-2 space-y-1">
                 <li className="text-sm text-[#1f3c50]">
-                  • Explica qué ocurre (no imprime, error, etc.)
+                  • Indica qué ocurre (no imprime, error, papel atascado, etc.)
                 </li>
                 <li className="text-sm text-[#1f3c50]">
-                  • Indica cuándo comenzó el problema
+                  • Menciona cuándo comenzó el problema
+                </li>
+                <li className="text-xs text-[#64748b]">
+                  Ejemplo: "Mi impresora no imprime desde ayer"
                 </li>
               </ul>
             </div>
@@ -52,13 +56,16 @@ export default function PepeInfoCard() {
 
               <ul className="mt-2 space-y-1">
                 <li className="text-sm text-[#1f3c50]">
-                  • Modelo de tu impresora
+                  • Pepe ya identifica tu impresora automáticamente
                 </li>
                 <li className="text-sm text-[#1f3c50]">
-                  • Luces o códigos de error
+                  • Indica luces o códigos de error
                 </li>
                 <li className="text-sm text-[#1f3c50]">
                   • Tipo de conexión (USB, WiFi)
+                </li>
+                <li className="text-xs text-[#64748b]">
+                  Ejemplo: "Tiene luz roja parpadeando y está por WiFi"
                 </li>
               </ul>
             </div>
@@ -77,16 +84,16 @@ export default function PepeInfoCard() {
 
               <ul className="mt-2 space-y-1">
                 <li className="text-sm text-[#1f3c50]">
-                  • Aplica los pasos indicados
+                  • Aplica los pasos que te indica Pepe
                 </li>
                 <li className="text-sm text-[#1f3c50]">
-                  • Si no funciona, brinda más información
+                  • Responde para continuar el diagnóstico
                 </li>
               </ul>
             </div>
           </div>
 
-          {/* 🔹 PASO 4 (nuevo) */}
+          {/* 🔹 PASO 4 */}
           <div className="flex items-start gap-4 relative">
             <div className="w-8 h-8 flex items-center justify-center rounded-full bg-[#4e24b1] text-white font-bold text-sm shadow-md">
               4
@@ -94,15 +101,21 @@ export default function PepeInfoCard() {
 
             <div>
               <h4 className="text-sm font-semibold text-[#0f172a]">
-                Confirma la solución
+                Confirmación o ayuda especializada
               </h4>
 
               <ul className="mt-2 space-y-1">
                 <li className="text-sm text-[#1f3c50]">
-                  • Verifica que tu impresora funcione correctamente
+                  • Verifica si la impresora funciona correctamente
                 </li>
                 <li className="text-sm text-[#1f3c50]">
-                  • Si el problema persiste, continúa la conversación
+                  • Si el problema continúa, sigue conversando con Pepe
+                </li>
+                <li className="text-sm text-[#1f3c50]">
+                  • Pepe derivará tu caso automáticamente a un técnico
+                </li>
+                <li className="text-xs text-[#64748b]">
+                  Ejemplo: "No funcionó, necesito ayuda" → un técnico continuará contigo
                 </li>
               </ul>
             </div>
@@ -110,6 +123,12 @@ export default function PepeInfoCard() {
 
         </div>
       </div>
+
+      {/* ⚖️ Nota legal */}
+      <p className="text-[11px] text-center text-[#94a3b8] mt-4">
+        Este servicio forma parte del soporte de impresoras brindado por Misión Tecnológica.
+      </p>
+
     </div>
   )
 }

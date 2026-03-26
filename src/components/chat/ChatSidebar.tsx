@@ -29,10 +29,16 @@ export default function ChatSidebar({
     deleteChat(id)
     refreshChats()
 
-    // 🔥 SOLO SI ES EL CHAT ACTUAL
     if (id === activeChatId) {
       onDeleteActiveChat()
     }
+  }
+
+  // 🔥 TRUNCATE DINÁMICO
+  const truncateText = (text: string, maxLength: number) => {
+    if (!text) return ''
+    if (text.length <= maxLength) return text
+    return text.slice(0, maxLength).trim() + '...'
   }
 
   const formatDateTime = (date?: string) => {
@@ -60,6 +66,7 @@ export default function ChatSidebar({
 
   return (
     <>
+      {/* OVERLAY */}
       <div
         onClick={onClose}
         className={`
@@ -69,20 +76,22 @@ export default function ChatSidebar({
         `}
       />
 
+      {/* SIDEBAR */}
       <div
         className={`
           absolute top-0 left-0 h-full
-          w-56 sm:w-60
+          w-64 sm:w-72
           z-20
           bg-white
-          border-r border-white
+          border-r border-gray-200
           p-3 sm:p-4
           flex flex-col
           transform transition-transform duration-300
           ${isOpen ? 'translate-x-0' : '-translate-x-full'}
         `}
       >
-        <div className="space-y-1.5 text-sm mt-2">
+        {/* ACCIONES */}
+        <div className="space-y-2 text-sm mt-2">
           <button
             onClick={() => {
               onNewChat()
@@ -90,75 +99,84 @@ export default function ChatSidebar({
             }}
             className="flex items-center gap-2 w-full px-3 py-2 rounded-lg hover:bg-gray-100 transition"
           >
-            <MessageSquare size={15} />
-            <span className="text-sm">Nuevo chat</span>
+            <MessageSquare size={16} />
+            <span>Nuevo chat</span>
           </button>
 
           <button className="flex items-center gap-2 w-full px-3 py-2 rounded-lg hover:bg-gray-100 transition">
-            <Search size={15} />
-            <span className="text-sm">Buscar</span>
+            <Search size={16} />
+            <span>Buscar</span>
           </button>
         </div>
 
-        <div className="mt-4 border-t border-gray-200 pt-3 flex-1 overflow-y-auto">
-          <p className="text-[10px] sm:text-xs text-gray-400 font-semibold tracking-wide mb-2">
+        {/* LISTA */}
+        <div className="mt-4 border-t border-gray-200 pt-3 flex-1 overflow-y-auto pr-1">
+          <p className="text-xs text-gray-400 font-semibold tracking-wide mb-2">
             CONVERSACIONES
           </p>
 
           {chats.length === 0 ? (
-            <div className="text-xs sm:text-sm text-gray-400 text-center mt-6">
+            <div className="text-sm text-gray-400 text-center mt-6">
               Sin conversaciones aún.
             </div>
           ) : (
             <div className="space-y-1">
-              {chats.map((chat) => (
-                <div
-                  key={chat.id}
-                  className={`
-                      flex justify-between items-center px-2 py-2 rounded-lg group cursor-pointer transition
+              {chats.map((chat) => {
+                const isActive = chat.id === activeChatId
+
+                return (
+                  <div
+                    key={chat.id}
+                    className={`
+                      flex justify-between items-start px-3 py-2 rounded-lg group cursor-pointer transition
                       ${
-                        chat.id === activeChatId
+                        isActive
                           ? 'bg-blue-50 text-blue-700'
                           : 'hover:bg-gray-100 text-gray-700'
                       }
                     `}
-                >
-                  <div
-                    onClick={() => {
-                      onSelectChat(chat)
-                      onClose()
-                    }}
-                    className="flex flex-col flex-1 cursor-pointer"
                   >
-                    <span
-                      className={`
-                      text-sm truncate
-                      ${
-                        chat.id === activeChatId
-                          ? 'font-semibold text-blue-700'
-                          : 'text-gray-700'
-                      }
-                    `}
+                    {/* TEXTO */}
+                    <div
+                      onClick={() => {
+                        onSelectChat(chat)
+                        onClose()
+                      }}
+                      className="flex flex-col flex-1 cursor-pointer"
                     >
-                      {chat.title}
-                    </span>
+                      <span
+                        className={`
+                          text-sm leading-tight wrap-break-word
+                          ${
+                            isActive
+                              ? 'font-semibold text-blue-700 truncate'
+                              : 'line-clamp-2 text-gray-700'
+                          }
+                        `}
+                      >
+                        {isActive
+                          ? truncateText(chat.title, 26) // 🔥 ACTIVO
+                          : truncateText(chat.title, 60)} {/* 🔥 NORMAL */}
+                      </span>
 
-                    <span className="text-[10px] text-gray-400">
-                      {formatDateTime(chat.createdAt)}
-                    </span>
+                      <span className="text-[11px] text-gray-400 mt-1">
+                        {formatDateTime(chat.createdAt)}
+                      </span>
+                    </div>
+
+                    {/* DELETE */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleDelete(chat.id)
+                      }}
+                      className="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-500 transition ml-2 mt-1"
+                    >
+                      <Trash2 size={14} />
+                    </button>
                   </div>
-
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      handleDelete(chat.id)
-                    }}
-                    className="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-500 transition"
-                  >
-                    <Trash2 size={14} />
-                  </button>
-                </div>
-              ))}
+                )
+              })}
             </div>
           )}
         </div>
