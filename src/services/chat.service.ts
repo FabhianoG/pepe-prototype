@@ -11,45 +11,99 @@ export type Chat = {
 }
 
 const KEY = 'pepe_chats'
+const MAX_CHATS = 50 // 🔥 límite opcional
 
-// obtener
+// obtener chats (seguro)
 export const getChats = (): Chat[] => {
-  const data = localStorage.getItem(KEY)
-  return data ? JSON.parse(data) : []
+  try {
+    const data = localStorage.getItem(KEY)
+    if (!data) return []
+
+    const parsed = JSON.parse(data)
+
+    // validar estructura básica
+    if (!Array.isArray(parsed)) return []
+
+    return parsed
+  } catch (error) {
+    console.error('Error leyendo chats:', error)
+    return []
+  }
 }
 
 // guardar todos
 const saveChats = (chats: Chat[]) => {
-  localStorage.setItem(KEY, JSON.stringify(chats))
+  try {
+    localStorage.setItem(KEY, JSON.stringify(chats))
+  } catch (error) {
+    console.error('Error guardando chats:', error)
+  }
+}
+
+// generar título inteligente
+const generateTitle = (messages: Message[]) => {
+  const firstUserMsg = messages.find(m => m.sender === 'user')
+
+  if (!firstUserMsg || !firstUserMsg.text.trim()) {
+    return 'Nuevo chat'
+  }
+
+  return firstUserMsg.text.slice(0, 30)
 }
 
 // guardar nuevo chat
 export const saveNewChat = (messages: Message[]) => {
-  if (messages.length === 0) return
+  if (!messages || messages.length === 0) return
 
   const chats = getChats()
 
   const newChat: Chat = {
     id: `chat-${Date.now()}`,
-    title: messages[0].text.slice(0, 30),
+    title: generateTitle(messages),
     messages,
-    createdAt: new Date().toISOString(), 
+    createdAt: new Date().toISOString(),
   }
 
-  saveChats([newChat, ...chats])
+  const updatedChats = [newChat, ...chats].slice(0, MAX_CHATS)
+
+  saveChats(updatedChats)
 }
 
-// 🔥 actualizar chat existente
+// actualizar chat existente
 export const updateChat = (id: string, messages: Message[]) => {
-  const chats = getChats().map(chat =>
-    chat.id === id ? { ...chat, messages } : chat
+  if (!id || !messages) return
+
+  const chats = getChats()
+
+  const exists = chats.some(chat => chat.id === id)
+  if (!exists) {
+    console.warn('Chat no encontrado:', id)
+    return
+  }
+
+  const updatedChats = chats.map(chat =>
+    chat.id === id
+      ? {
+          ...chat,
+          messages,
+          title: generateTitle(messages), // 🔥 actualiza título
+        }
+      : chat
   )
 
-  saveChats(chats)
+  saveChats(updatedChats)
 }
 
 // eliminar
 export const deleteChat = (id: string) => {
-  const chats = getChats().filter(c => c.id !== id)
-  saveChats(chats)
+  const chats = getChats()
+
+  const updatedChats = chats.filter(c => c.id !== id)
+
+  saveChats(updatedChats)
+}
+
+// 🔥 extra útil
+export const clearChats = () => {
+  localStorage.removeItem(KEY)
 }
