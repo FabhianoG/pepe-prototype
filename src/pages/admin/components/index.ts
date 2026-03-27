@@ -1,5 +1,5 @@
 export { default as DashboardView } from './DashboardView'
 export { default as UsuariosView } from './UsuariosView'
 export { default as EmpresasView } from './EmpresasView'
-export { default as TicketsView } from './TicketsView'
+//export { default as TicketsView } from './TicketsView'
 export { default as SettingsView } from './SettingsView'

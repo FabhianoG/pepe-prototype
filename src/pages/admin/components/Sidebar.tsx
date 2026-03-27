@@ -2,7 +2,7 @@ import {
   LayoutDashboard,
   Users,
   Building2,
-  Ticket,
+  //Ticket,
   Settings,
   LogOut,
 } from 'lucide-react'
@@ -27,7 +27,7 @@ export default function Sidebar({
     { icon: LayoutDashboard, label: 'Dashboard', view: 'dashboard' },
     { icon: Users, label: 'Usuarios', view: 'usuarios' },
     { icon: Building2, label: 'Empresas', view: 'empresas' },
-    { icon: Ticket, label: 'Tickets', view: 'tickets' },
+    //{ icon: Ticket, label: 'Tickets', view: 'tickets' },
     { icon: Settings, label: 'Configuración', view: 'settings' },
   ]
 

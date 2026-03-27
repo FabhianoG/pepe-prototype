@@ -5,7 +5,7 @@ import { Menu } from 'lucide-react'
 import DashboardView from './components/DashboardView'
 import UsuariosView from './components/UsuariosView'
 import EmpresasView from './components/EmpresasView'
-import TicketsView from './components/TicketsView'
+//import TicketsView from './components/TicketsView'
 import SettingsView from './components/SettingsView'
 
 export default function Admin() {
@@ -18,8 +18,8 @@ export default function Admin() {
         return <UsuariosView />
       case 'empresas':
         return <EmpresasView />
-      case 'tickets':
-        return <TicketsView />
+      //case 'tickets':
+        //return <TicketsView />
       case 'settings':
         return <SettingsView />
       default:

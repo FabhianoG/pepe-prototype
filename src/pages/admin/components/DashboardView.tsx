@@ -1,9 +1,8 @@
 import {
-  Users,
   Building2,
-  Ticket,
-  Activity,
-  LayoutDashboard,
+  Bot,
+  MessageSquare,
+  TrendingUp,
 } from 'lucide-react'
 
 import {
@@ -12,49 +11,54 @@ import {
   Cell,
   Tooltip,
   ResponsiveContainer,
-  LineChart,
-  Line,
+  BarChart,
+  Bar,
   XAxis,
   YAxis,
   CartesianGrid,
-  BarChart,
-  Bar,
+  LineChart,
+  Line,
 } from 'recharts'
 
 export default function DashboardView() {
-  // 📊 DATA MOCK
-  const estadoData = [
-    { name: 'Abiertos', value: 10 },
-    { name: 'En proceso', value: 8 },
-    { name: 'Resueltos', value: 5 },
+  // 📊 DATA FICTICIA SEGURA
+  const empresasUso = [
+    { name: 'Empresa A', chats: 52 },
+    { name: 'Empresa B', chats: 34 },
+    { name: 'Empresa C', chats: 21 },
+    { name: 'Empresa D', chats: 18 },
   ]
 
-  const prioridadData = [
-    { name: 'Alta', value: 6 },
-    { name: 'Media', value: 10 },
-    { name: 'Baja', value: 7 },
+  const usoIA = [
+    { name: 'Resueltos por IA', value: 68 },
+    { name: 'Escalados a soporte', value: 32 },
   ]
 
-  const ticketsPorDia = [
-    { dia: 'Lun', tickets: 5 },
-    { dia: 'Mar', tickets: 8 },
-    { dia: 'Mié', tickets: 6 },
-    { dia: 'Jue', tickets: 10 },
-    { dia: 'Vie', tickets: 7 },
+  const chatsPorDia = [
+    { dia: 'Lun', chats: 14 },
+    { dia: 'Mar', chats: 22 },
+    { dia: 'Mié', chats: 19 },
+    { dia: 'Jue', chats: 28 },
+    { dia: 'Vie', chats: 24 },
   ]
 
-  const COLORS = ['#ef4444', '#f59e0b', '#22c55e']
+  const COLORS = ['#22c55e', '#ef4444']
 
   return (
     <div className="p-6 bg-gray-50 min-h-full space-y-6">
       {/* HEADER */}
-      <div className="flex flex-col">
-        <div className="flex items-center gap-2">
-          <LayoutDashboard className="text-purple-600" size={22} />
-          <h2 className="text-2xl font-semibold text-gray-900">Dashboard</h2>
-        </div>
-        <p className="text-sm text-gray-500 mt-1">
-          Métricas del sistema de soporte
+      <div>
+        <h2 className="text-2xl font-semibold text-gray-900 flex items-center gap-2">
+          <Bot className="text-purple-600" size={22} />
+          Dashboard Pepe IA
+        </h2>
+        <p className="text-sm text-gray-500">
+          Métricas de uso e inteligencia del sistema
+        </p>
+
+        {/* DISCLAIMER */}
+        <p className="text-xs text-gray-400 mt-1">
+          * Datos simulados con fines demostrativos
         </p>
       </div>
 
@@ -62,49 +66,68 @@ export default function DashboardView() {
       <div className="grid md:grid-cols-4 gap-4">
         <div className="bg-white border rounded-xl p-4 shadow-sm">
           <div className="flex justify-between">
-            <p className="text-sm text-gray-500">Usuarios</p>
-            <Users className="text-blue-600" size={18} />
+            <p className="text-sm text-gray-500">Chats Totales</p>
+            <MessageSquare className="text-blue-600" size={18} />
           </div>
-          <p className="text-2xl font-semibold mt-2">120</p>
+          <p className="text-2xl font-semibold mt-2">125</p>
         </div>
 
         <div className="bg-white border rounded-xl p-4 shadow-sm">
           <div className="flex justify-between">
-            <p className="text-sm text-gray-500">Empresas</p>
-            <Building2 className="text-purple-600" size={18} />
+            <p className="text-sm text-gray-500">Interacciones IA</p>
+            <Bot className="text-purple-600" size={18} />
           </div>
-          <p className="text-2xl font-semibold mt-2">8</p>
+          <p className="text-2xl font-semibold mt-2">98</p>
         </div>
 
         <div className="bg-white border rounded-xl p-4 shadow-sm">
           <div className="flex justify-between">
-            <p className="text-sm text-gray-500">Tickets</p>
-            <Ticket className="text-yellow-600" size={18} />
+            <p className="text-sm text-gray-500">Empresas activas</p>
+            <Building2 className="text-yellow-600" size={18} />
           </div>
-          <p className="text-2xl font-semibold mt-2">23</p>
+          <p className="text-2xl font-semibold mt-2">16</p>
         </div>
 
         <div className="bg-white border rounded-xl p-4 shadow-sm">
           <div className="flex justify-between">
-            <p className="text-sm text-gray-500">Estado</p>
-            <Activity className="text-green-600" size={18} />
+            <p className="text-sm text-gray-500">Eficiencia IA</p>
+            <TrendingUp className="text-green-600" size={18} />
           </div>
-          <p className="text-2xl font-semibold text-green-600 mt-2">Activo</p>
+          <p className="text-2xl font-semibold text-green-600 mt-2">
+            68%
+          </p>
         </div>
       </div>
 
       {/* GRÁFICOS */}
       <div className="grid md:grid-cols-2 gap-6">
-        {/* PIE CHART */}
+        {/* EMPRESAS */}
         <div className="bg-white border rounded-xl p-5 shadow-sm">
           <h3 className="text-sm font-medium text-gray-700 mb-4">
-            Estado de Tickets
+            Uso del chat por empresa
+          </h3>
+
+          <ResponsiveContainer width="100%" height={250}>
+            <BarChart data={empresasUso}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Bar dataKey="chats" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* IA VS SOPORTE */}
+        <div className="bg-white border rounded-xl p-5 shadow-sm">
+          <h3 className="text-sm font-medium text-gray-700 mb-4">
+            Resolución Pepe IA
           </h3>
 
           <ResponsiveContainer width="100%" height={250}>
             <PieChart>
-              <Pie data={estadoData} dataKey="value" outerRadius={80} label>
-                {estadoData.map((_, index) => (
+              <Pie data={usoIA} dataKey="value" outerRadius={80} label>
+                {usoIA.map((_, index) => (
                   <Cell key={index} fill={COLORS[index]} />
                 ))}
               </Pie>
@@ -112,38 +135,21 @@ export default function DashboardView() {
             </PieChart>
           </ResponsiveContainer>
         </div>
-
-        {/* BAR CHART */}
-        <div className="bg-white border rounded-xl p-5 shadow-sm">
-          <h3 className="text-sm font-medium text-gray-700 mb-4">
-            Prioridad de Tickets
-          </h3>
-
-          <ResponsiveContainer width="100%" height={250}>
-            <BarChart data={prioridadData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Bar dataKey="value" />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
       </div>
 
-      {/* LINE CHART */}
+      {/* ACTIVIDAD */}
       <div className="bg-white border rounded-xl p-5 shadow-sm">
         <h3 className="text-sm font-medium text-gray-700 mb-4">
-          Tickets por día
+          Actividad del chat (Pepe IA)
         </h3>
 
         <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={ticketsPorDia}>
+          <LineChart data={chatsPorDia}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="dia" />
             <YAxis />
             <Tooltip />
-            <Line type="monotone" dataKey="tickets" strokeWidth={2} />
+            <Line type="monotone" dataKey="chats" strokeWidth={2} />
           </LineChart>
         </ResponsiveContainer>
       </div>

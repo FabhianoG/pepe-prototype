@@ -16,7 +16,7 @@ import {
   DashboardView,
   UsuariosView,
   EmpresasView,
-  TicketsView,
+  //TicketsView,
   SettingsView
 } from './pages/admin/components'
 
@@ -46,7 +46,7 @@ function App() {
           <Route index element={<DashboardView />} />
           <Route path="usuarios" element={<UsuariosView />} />
           <Route path="empresas" element={<EmpresasView />} />
-          <Route path="tickets" element={<TicketsView />} />
+          {/* <Route path="tickets" element={<TicketsView />} /> */}
           <Route path="settings" element={<SettingsView />} />
         </Route>
 
