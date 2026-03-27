@@ -28,7 +28,7 @@ export default function SettingsView() {
   }
 
   return (
-    <div className="p-6 bg-gray-100 min-h-full">
+    <div className="p-6 min-h-full">
       <div className="bg-white rounded-2xl border border-gray-100 shadow-md p-6">
 
         {/* HEADER */}

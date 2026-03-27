@@ -45,7 +45,7 @@ export default function DashboardView() {
   const COLORS = ['#22c55e', '#ef4444']
 
   return (
-    <div className="p-6 bg-gray-50 min-h-full space-y-6">
+    <div className="p-6 bg-white rounded-2xl border border-gray-100 shadow-md min-h-full space-y-6">
       {/* HEADER */}
       <div>
         <h2 className="text-2xl font-semibold text-gray-900 flex items-center gap-2">
