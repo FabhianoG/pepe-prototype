@@ -229,7 +229,7 @@ La impresora ${monitoredDevice.name} ya está funcionando correctamente
 Si necesitas ayuda, aquí estaré 🤖`
     }
 
-    return `🤔 ¿Se solucionó el problema o continúa?`
+    return `🤔 ¿Se solucionó el problema?`
   }
 
   // 🔴 DERIVACIÓN

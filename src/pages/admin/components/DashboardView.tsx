@@ -55,11 +55,6 @@ export default function DashboardView() {
         <p className="text-sm text-gray-500">
           Métricas de uso e inteligencia del sistema
         </p>
-
-        {/* DISCLAIMER */}
-        <p className="text-xs text-gray-400 mt-1">
-          * Datos simulados con fines demostrativos
-        </p>
       </div>
 
       {/* KPIs */}
