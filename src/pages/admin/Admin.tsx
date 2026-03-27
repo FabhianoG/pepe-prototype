@@ -6,7 +6,7 @@ import DashboardView from './components/DashboardView'
 import UsuariosView from './components/UsuariosView'
 import EmpresasView from './components/EmpresasView'
 //import TicketsView from './components/TicketsView'
-import SettingsView from './components/SettingsView'
+//import SettingsView from './components/SettingsView'
 
 export default function Admin() {
   const [open, setOpen] = useState(false)
@@ -20,8 +20,8 @@ export default function Admin() {
         return <EmpresasView />
       //case 'tickets':
         //return <TicketsView />
-      case 'settings':
-        return <SettingsView />
+      //case 'settings':
+        //return <SettingsView />
       default:
         return <DashboardView />
     }

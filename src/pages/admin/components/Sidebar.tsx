@@ -3,7 +3,8 @@ import {
   Users,
   Building2,
   //Ticket,
-  Settings,
+  
+  //Settings,
   LogOut,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
@@ -28,7 +29,7 @@ export default function Sidebar({
     { icon: Users, label: 'Usuarios', view: 'usuarios' },
     { icon: Building2, label: 'Empresas', view: 'empresas' },
     //{ icon: Ticket, label: 'Tickets', view: 'tickets' },
-    { icon: Settings, label: 'Configuración', view: 'settings' },
+    //{ icon: Settings, label: 'Configuración', view: 'settings' },
   ]
 
   return (

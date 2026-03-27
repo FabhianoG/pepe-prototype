@@ -17,7 +17,7 @@ import {
   UsuariosView,
   EmpresasView,
   //TicketsView,
-  SettingsView
+  //SettingsView
 } from './pages/admin/components'
 
 function App() {
@@ -47,7 +47,7 @@ function App() {
           <Route path="usuarios" element={<UsuariosView />} />
           <Route path="empresas" element={<EmpresasView />} />
           {/* <Route path="tickets" element={<TicketsView />} /> */}
-          <Route path="settings" element={<SettingsView />} />
+          {/* <Route path="settings" element={<SettingsView />} /> */}
         </Route>
 
       </Routes>
