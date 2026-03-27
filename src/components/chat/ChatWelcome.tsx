@@ -45,9 +45,9 @@ export default function ChatWelcome() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="mt-3 flex flex-col items-center gap-1 text-blue-600 font-medium cursor-pointer"
+          className="mt-3 flex flex-col items-center gap-1 text-blue-600 font-medium"
         >
-          <span className="hover:underline">
+          <span>
             Escríbeme y te ayudaré al instante
           </span>
 
